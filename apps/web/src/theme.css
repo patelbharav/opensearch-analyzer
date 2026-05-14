@@ -1,7 +1,12 @@
 /* ---- OpenSearch Analyzer: Sophisticated Theme ---- */
-/* Palette: muted navy, cool grays, understated accents */
+/* Palette: warm stone surfaces, muted navy accents, Inter font */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
+  /* Typography */
+  --osa-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
   /* Primary — deep muted navy, never screams */
   --osa-gradient-primary: linear-gradient(145deg, #2d3748 0%, #4a5568 100%);
   --osa-gradient-dark: linear-gradient(145deg, #1a202c 0%, #2d3748 100%);
@@ -12,19 +17,20 @@
   --osa-color-danger: #c53030;
   --osa-color-info: #4299e1;
 
-  /* Surfaces */
-  --osa-surface: #ffffff;
-  --osa-surface-raised: #f7fafc;
-  --osa-surface-sunken: #edf2f7;
+  /* Surfaces — warm stone/cream tones, not pure white */
+  --osa-surface: #f9fafb;
+  --osa-surface-raised: #ffffff;
+  --osa-surface-sunken: #f3f4f6;
+  --osa-page-bg: #f0f1f3;
 
-  /* Text — never pure black */
-  --osa-text-primary: #2d3748;
-  --osa-text-secondary: #718096;
-  --osa-text-muted: #a0aec0;
+  /* Text — warm dark, readable */
+  --osa-text-primary: #1f2937;
+  --osa-text-secondary: #6b7280;
+  --osa-text-muted: #9ca3af;
 
-  /* Borders — barely there */
-  --osa-border: #e2e8f0;
-  --osa-border-hover: #cbd5e0;
+  /* Borders */
+  --osa-border: #e5e7eb;
+  --osa-border-hover: #d1d5db;
 
   /* Cards */
   --osa-glass-bg: rgba(255, 255, 255, 0.9);
@@ -38,29 +44,44 @@
 
 /* Dark mode */
 .awsui-dark {
-  --osa-gradient-primary: linear-gradient(145deg, #2d3748 0%, #4a5568 100%);
-  --osa-gradient-dark: linear-gradient(145deg, #171923 0%, #1a202c 100%);
+  --osa-gradient-primary: linear-gradient(145deg, #374151 0%, #4b5563 100%);
+  --osa-gradient-dark: linear-gradient(145deg, #111827 0%, #1f2937 100%);
 
-  --osa-color-success: #68d391;
-  --osa-color-warning: #ecc94b;
-  --osa-color-danger: #fc8181;
-  --osa-color-info: #63b3ed;
+  --osa-color-success: #6ee7b7;
+  --osa-color-warning: #fcd34d;
+  --osa-color-danger: #fca5a5;
+  --osa-color-info: #93c5fd;
 
-  --osa-surface: #1a202c;
-  --osa-surface-raised: #2d3748;
-  --osa-surface-sunken: #171923;
+  --osa-surface: #1f2937;
+  --osa-surface-raised: #374151;
+  --osa-surface-sunken: #111827;
+  --osa-page-bg: #111827;
 
-  --osa-text-primary: #e2e8f0;
-  --osa-text-secondary: #a0aec0;
-  --osa-text-muted: #718096;
+  --osa-text-primary: #f3f4f6;
+  --osa-text-secondary: #d1d5db;
+  --osa-text-muted: #9ca3af;
 
-  --osa-border: #2d3748;
-  --osa-border-hover: #4a5568;
+  --osa-border: #374151;
+  --osa-border-hover: #4b5563;
 
-  --osa-glass-bg: rgba(26, 32, 44, 0.9);
-  --osa-glass-border: rgba(45, 55, 72, 0.8);
-  --osa-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  --osa-card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --osa-glass-bg: rgba(31, 41, 55, 0.9);
+  --osa-glass-border: rgba(55, 65, 81, 0.8);
+  --osa-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --osa-card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Global font + page background ---- */
+body, html {
+  font-family: var(--osa-font) !important;
+  background: var(--osa-page-bg) !important;
+  color: var(--osa-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Override Cloudscape's internal font to match */
+[class*="awsui"] {
+  font-family: var(--osa-font) !important;
 }
 
 /* ---- Hero banners ---- */
