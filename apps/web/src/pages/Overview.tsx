@@ -103,49 +103,47 @@ export function OverviewPage() {
       }
     >
       <SpaceBetween size="l">
-        {/* ---- Metric cards ---- */}
-        {summary && (
-          <>
-            <div className="osa-section-header">Health</div>
-            <div className="osa-stat-grid">
-              <MetricCard label="Cluster status"
-                value={summary.red ? "RED" : summary.yellow ? "YELLOW" : "GREEN"}
-                status={summary.red ? "danger" : summary.yellow ? "warning" : "success"} />
-              <MetricCard label="JVM heap (peak)" value={`${Math.round(summary.jvmMax)}%`}
-                status={summary.jvmMax >= 80 ? "danger" : undefined} threshold="< 80%" />
-              <MetricCard label="CPU (peak)" value={`${Math.round(summary.cpuMax)}%`}
-                status={summary.cpuMax >= 75 ? "warning" : undefined} threshold="< 75%" />
-              <MetricCard label="5xx error rate"
-                value={summary.totalRequests > 0 ? `${summary.fivexxRate.toFixed(2)}%` : "n/a"}
-                status={summary.fivexxRate > 10 ? "danger" : undefined} threshold="< 10%" />
-            </div>
+        {/* ---- Metric cards (always rendered for stable layout) ---- */}
+        <div className="osa-section-header">Health</div>
+        <div className="osa-stat-grid">
+          <MetricCard label="Cluster status"
+            value={summary ? (summary.red ? "RED" : summary.yellow ? "YELLOW" : "GREEN") : "—"}
+            status={summary ? (summary.red ? "danger" : summary.yellow ? "warning" : "success") : undefined} />
+          <MetricCard label="JVM heap (peak)"
+            value={summary ? `${Math.round(summary.jvmMax)}%` : "—"}
+            status={summary && summary.jvmMax >= 80 ? "danger" : undefined} threshold="< 80%" />
+          <MetricCard label="CPU (peak)"
+            value={summary ? `${Math.round(summary.cpuMax)}%` : "—"}
+            status={summary && summary.cpuMax >= 75 ? "warning" : undefined} threshold="< 75%" />
+          <MetricCard label="5xx error rate"
+            value={summary ? (summary.totalRequests > 0 ? `${summary.fivexxRate.toFixed(2)}%` : "n/a") : "—"}
+            status={summary && summary.fivexxRate > 10 ? "danger" : undefined} threshold="< 10%" />
+        </div>
 
-            <div className="osa-section-header">Performance</div>
-            <div className="osa-stat-grid">
-              <MetricCard label="Indexing latency" value={`${summary.indexingAvg.toFixed(1)} ms`} />
-              <MetricCard label="Search latency" value={`${summary.searchAvg.toFixed(1)} ms`} />
-              <MetricCard label="Free storage (min)" value={`${(summary.freeStorageMin / 1024).toFixed(1)} GiB`} />
-              <MetricCard label="Total requests" value={Math.round(summary.totalRequests).toLocaleString()} />
-            </div>
+        <div className="osa-section-header">Performance</div>
+        <div className="osa-stat-grid">
+          <MetricCard label="Indexing latency" value={summary ? `${summary.indexingAvg.toFixed(1)} ms` : "—"} />
+          <MetricCard label="Search latency" value={summary ? `${summary.searchAvg.toFixed(1)} ms` : "—"} />
+          <MetricCard label="Free storage (min)" value={summary ? `${(summary.freeStorageMin / 1024).toFixed(1)} GiB` : "—"} />
+          <MetricCard label="Total requests" value={summary ? Math.round(summary.totalRequests).toLocaleString() : "—"} />
+        </div>
 
-            <div className="osa-section-header">Stability</div>
-            <div className="osa-stat-grid">
-              <MetricCard label="Snapshot failures"
-                value={String(Math.round(summary.snapshotFailures))}
-                status={summary.snapshotFailures > 0 ? "danger" : "success"} />
-              <MetricCard label="EBS burst balance"
-                value={summary.burstBalanceMin !== null ? `${Math.round(summary.burstBalanceMin)}%` : "n/a"}
-                status={summary.burstBalanceMin !== null && summary.burstBalanceMin < 70 ? "danger" : undefined}
-                threshold="> 70%" />
-              <MetricCard label="Search rejections"
-                value={String(Math.round(summary.searchRejected))}
-                status={summary.searchRejected > 0 ? "danger" : "success"} />
-              <MetricCard label="Write rejections"
-                value={String(Math.round(summary.writeRejected))}
-                status={summary.writeRejected > 0 ? "danger" : "success"} />
-            </div>
-          </>
-        )}
+        <div className="osa-section-header">Stability</div>
+        <div className="osa-stat-grid">
+          <MetricCard label="Snapshot failures"
+            value={summary ? String(Math.round(summary.snapshotFailures)) : "—"}
+            status={summary && summary.snapshotFailures > 0 ? "danger" : summary ? "success" : undefined} />
+          <MetricCard label="EBS burst balance"
+            value={summary ? (summary.burstBalanceMin !== null ? `${Math.round(summary.burstBalanceMin)}%` : "n/a") : "—"}
+            status={summary && summary.burstBalanceMin !== null && summary.burstBalanceMin < 70 ? "danger" : undefined}
+            threshold="> 70%" />
+          <MetricCard label="Search rejections"
+            value={summary ? String(Math.round(summary.searchRejected)) : "—"}
+            status={summary && summary.searchRejected > 0 ? "danger" : summary ? "success" : undefined} />
+          <MetricCard label="Write rejections"
+            value={summary ? String(Math.round(summary.writeRejected)) : "—"}
+            status={summary && summary.writeRejected > 0 ? "danger" : summary ? "success" : undefined} />
+        </div>
 
         {/* ---- Charts: core metrics ---- */}
         <div className="osa-section-header">Core metrics</div>
