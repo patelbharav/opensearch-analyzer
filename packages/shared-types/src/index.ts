@@ -266,7 +266,22 @@ export interface NamingConvention {
   message: string;
 }
 
-export type SopRule = ThresholdOverride | CustomPolicy | NamingConvention;
+/**
+ * A free-text rule described in natural language. During scan, the AI agent
+ * reads this paragraph together with a cluster snapshot summary and produces
+ * findings. Examples:
+ *   "If it is a log analytics workload, the largest index should be 45 GB."
+ *   "In a multi-tenant system, tenants with < 1 GB daily ingest should use
+ *    shared indices. Larger tenants should get dedicated indices."
+ */
+export interface ProseRule {
+  kind: "prose";
+  name: string;
+  description: string;
+  severity: Severity;
+}
+
+export type SopRule = ThresholdOverride | CustomPolicy | NamingConvention | ProseRule;
 
 export interface SopRuleSet {
   id: string;

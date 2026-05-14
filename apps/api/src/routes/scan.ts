@@ -4,6 +4,7 @@ import type { ScanResult } from "@osa/shared-types";
 import { runAllDiagnostics, evaluateSopRuleSet } from "@osa/diagnostics-core";
 import { getDomain } from "../persistence/dynamo.js";
 import { getActiveSopRuleSets } from "../persistence/sop.js";
+import { evaluateProseRules } from "../sop/proseEvaluator.js";
 import {
   putFindings,
   putScan,
@@ -50,9 +51,20 @@ export const scanRoutes: FastifyPluginAsync = async (app) => {
     let sopFindings: import("@osa/shared-types").Finding[] = [];
     try {
       const activeRuleSets = await getActiveSopRuleSets(domainId);
+      // Structured rules (threshold, policy, naming) — synchronous, pure.
       sopFindings = activeRuleSets.flatMap((rs) =>
         evaluateSopRuleSet(snapshot, rs, { domainId, now: startedAt }),
       );
+      // Prose rules — async, calls the LLM.
+      const proseResults = await Promise.all(
+        activeRuleSets.map((rs) =>
+          evaluateProseRules(snapshot, rs, { domainId, now: startedAt }).catch((err) => {
+            req.log.warn({ err, ruleSetId: rs.id }, "Prose rule evaluation failed");
+            return [] as import("@osa/shared-types").Finding[];
+          }),
+        ),
+      );
+      sopFindings = [...sopFindings, ...proseResults.flat()];
     } catch (err) {
       req.log.warn({ err }, "SOP evaluation failed — skipping");
     }

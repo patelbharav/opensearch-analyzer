@@ -214,6 +214,11 @@ function CreateRuleSetModal({ visible, onDismiss, onCreated }: { visible: boolea
   const [nSeverity, setNSeverity] = useState<Severity>("medium");
   const [nMessage, setNMessage] = useState("");
 
+  // Prose form
+  const [prName, setPrName] = useState("");
+  const [prDescription, setPrDescription] = useState("");
+  const [prSeverity, setPrSeverity] = useState<Severity>("high");
+
   const addThreshold = () => {
     if (!tValue) return;
     const rule: ThresholdOverride = { kind: "threshold", diagnosticId: tDiagId, value: Number(tValue), severity: tSeverity };
@@ -243,6 +248,15 @@ function CreateRuleSetModal({ visible, onDismiss, onCreated }: { visible: boolea
     };
     setRules((prev) => [...prev, rule]);
     setNName(""); setNPattern(""); setNMessage("");
+  };
+
+  const addProse = () => {
+    if (!prName || !prDescription) return;
+    const rule: import("@osa/shared-types").ProseRule = {
+      kind: "prose", name: prName, description: prDescription, severity: prSeverity,
+    };
+    setRules((prev) => [...prev, rule]);
+    setPrName(""); setPrDescription("");
   };
 
   const removeRule = (i: number) => setRules((prev) => prev.filter((_, j) => j !== i));
@@ -332,6 +346,35 @@ function CreateRuleSetModal({ visible, onDismiss, onCreated }: { visible: boolea
               </SpaceBetween>
             ),
           },
+          {
+            id: "prose", label: "Natural language rules",
+            content: (
+              <SpaceBetween size="s">
+                <Box variant="p" color="text-body-secondary">
+                  Describe your best practice in plain English. The AI agent will evaluate the cluster
+                  against your description during every scan and flag violations.
+                </Box>
+                <FormField label="Rule name">
+                  <Input value={prName} onChange={(e) => setPrName(e.detail.value)} placeholder="e.g. Log analytics index size limit" />
+                </FormField>
+                <FormField
+                  label="Policy description (write as much detail as you want)"
+                  description="Be specific — include thresholds, workload types, and conditions."
+                >
+                  <Textarea
+                    value={prDescription}
+                    onChange={(e) => setPrDescription(e.detail.value)}
+                    rows={6}
+                    placeholder="Example: If it is a log analytics workload, the largest shard size for any index should be 45 GB instead of the standard 50 GB limit. In a multi-tenant system, tenants with less than 1 GB daily ingest should use shared indices, while larger tenants should get dedicated indices."
+                  />
+                </FormField>
+                <FormField label="Severity">
+                  <Select selectedOption={SEVERITY_OPTIONS.find((o) => o.value === prSeverity)!} options={SEVERITY_OPTIONS} onChange={(e) => setPrSeverity(e.detail.selectedOption.value as Severity)} />
+                </FormField>
+                <Button onClick={addProse} disabled={!prName || !prDescription}>Add rule</Button>
+              </SpaceBetween>
+            ),
+          },
         ]} />
 
         {rules.length > 0 && (
@@ -363,6 +406,7 @@ function ruleDetail(rule: SopRule): string {
     case "threshold": return `value ${rule.value}`;
     case "policy": return `${rule.target} ${rule.operator} ${rule.value}`;
     case "naming": return `/${rule.pattern}/ on ${rule.appliesTo}`;
+    case "prose": return rule.description.slice(0, 80) + (rule.description.length > 80 ? "..." : "");
   }
 }
 

@@ -36,6 +36,9 @@ function evaluateRule(
       return evaluatePolicy(snapshot, rule, ruleSet, ctx);
     case "naming":
       return evaluateNaming(snapshot, rule, ruleSet, ctx);
+    case "prose":
+      // Prose rules are evaluated by the LLM in the API layer, not here.
+      return [];
   }
 }
 
