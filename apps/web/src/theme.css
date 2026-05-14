@@ -1,124 +1,111 @@
-/* ---- OpenSearch Analyzer: Modern SaaS Theme ---- */
-/* Palette: indigo-blue primary, warm neutrals, restrained accents */
+/* ---- OpenSearch Analyzer: Sophisticated Theme ---- */
+/* Palette: muted navy, cool grays, understated accents */
 
 :root {
-  /* Primary palette — indigo-to-blue, sophisticated and calm */
-  --osa-gradient-primary: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
-  --osa-gradient-dark: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-  --osa-gradient-accent: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  --osa-gradient-danger: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-  --osa-gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  /* Primary — deep muted navy, never screams */
+  --osa-gradient-primary: linear-gradient(145deg, #2d3748 0%, #4a5568 100%);
+  --osa-gradient-dark: linear-gradient(145deg, #1a202c 0%, #2d3748 100%);
+
+  /* Accents — desaturated, never bright */
+  --osa-color-success: #48bb78;
+  --osa-color-warning: #d69e2e;
+  --osa-color-danger: #c53030;
+  --osa-color-info: #4299e1;
 
   /* Surfaces */
   --osa-surface: #ffffff;
-  --osa-surface-raised: #f8fafc;
-  --osa-surface-sunken: #f1f5f9;
+  --osa-surface-raised: #f7fafc;
+  --osa-surface-sunken: #edf2f7;
 
-  /* Text */
-  --osa-text-primary: #1e293b;
-  --osa-text-secondary: #64748b;
-  --osa-text-muted: #94a3b8;
+  /* Text — never pure black */
+  --osa-text-primary: #2d3748;
+  --osa-text-secondary: #718096;
+  --osa-text-muted: #a0aec0;
 
-  /* Borders */
+  /* Borders — barely there */
   --osa-border: #e2e8f0;
-  --osa-border-hover: #cbd5e1;
+  --osa-border-hover: #cbd5e0;
 
-  /* Glass / cards */
-  --osa-glass-bg: rgba(255, 255, 255, 0.8);
-  --osa-glass-border: rgba(226, 232, 240, 0.6);
-  --osa-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-  --osa-card-radius: 12px;
-  --osa-card-hover-lift: translateY(-2px);
-  --osa-card-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  --osa-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Semantic status colors */
-  --osa-color-success: #10b981;
-  --osa-color-warning: #f59e0b;
-  --osa-color-danger: #ef4444;
-  --osa-color-info: #3b82f6;
+  /* Cards */
+  --osa-glass-bg: rgba(255, 255, 255, 0.9);
+  --osa-glass-border: rgba(226, 232, 240, 0.8);
+  --osa-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --osa-card-radius: 8px;
+  --osa-card-hover-lift: translateY(-1px);
+  --osa-card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --osa-transition: 0.15s ease;
 }
 
 /* Dark mode */
 .awsui-dark {
-  --osa-gradient-primary: linear-gradient(135deg, #6366f1 0%, #60a5fa 100%);
-  --osa-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --osa-gradient-primary: linear-gradient(145deg, #2d3748 0%, #4a5568 100%);
+  --osa-gradient-dark: linear-gradient(145deg, #171923 0%, #1a202c 100%);
 
-  --osa-surface: #0f172a;
-  --osa-surface-raised: #1e293b;
-  --osa-surface-sunken: #0c1220;
+  --osa-color-success: #68d391;
+  --osa-color-warning: #ecc94b;
+  --osa-color-danger: #fc8181;
+  --osa-color-info: #63b3ed;
 
-  --osa-text-primary: #f1f5f9;
-  --osa-text-secondary: #94a3b8;
-  --osa-text-muted: #64748b;
+  --osa-surface: #1a202c;
+  --osa-surface-raised: #2d3748;
+  --osa-surface-sunken: #171923;
 
-  --osa-border: #334155;
-  --osa-border-hover: #475569;
+  --osa-text-primary: #e2e8f0;
+  --osa-text-secondary: #a0aec0;
+  --osa-text-muted: #718096;
 
-  --osa-glass-bg: rgba(15, 23, 42, 0.8);
-  --osa-glass-border: rgba(51, 65, 85, 0.6);
-  --osa-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-  --osa-card-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --osa-border: #2d3748;
+  --osa-border-hover: #4a5568;
 
-  --osa-color-success: #34d399;
-  --osa-color-warning: #fbbf24;
-  --osa-color-danger: #f87171;
-  --osa-color-info: #60a5fa;
+  --osa-glass-bg: rgba(26, 32, 44, 0.9);
+  --osa-glass-border: rgba(45, 55, 72, 0.8);
+  --osa-glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --osa-card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* ---- Hero banners ---- */
 .osa-hero {
   background: var(--osa-gradient-primary);
   border-radius: var(--osa-card-radius);
-  padding: 36px 40px;
+  padding: 32px 36px;
   color: #ffffff;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   position: relative;
   overflow: hidden;
 }
 .osa-hero::before {
   content: "";
   position: absolute;
-  top: -60%;
-  right: -15%;
-  width: 360px;
-  height: 360px;
-  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-.osa-hero::after {
-  content: "";
-  position: absolute;
-  bottom: -40%;
-  left: -10%;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
   pointer-events: none;
 }
 .osa-hero h1 {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  letter-spacing: -0.3px;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  letter-spacing: -0.2px;
 }
 .osa-hero p {
-  font-size: 14px;
-  opacity: 0.85;
+  font-size: 13px;
+  opacity: 0.75;
   margin: 0;
-  max-width: 560px;
+  max-width: 520px;
   line-height: 1.5;
 }
 
 /* ---- Glass cards ---- */
 .osa-glass-card {
   background: var(--osa-glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--osa-glass-border);
   border-radius: var(--osa-card-radius);
   box-shadow: var(--osa-glass-shadow);
-  padding: 24px;
+  padding: 20px;
   transition: transform var(--osa-transition), box-shadow var(--osa-transition);
 }
 .osa-glass-card:hover {
@@ -131,26 +118,25 @@
   background: var(--osa-surface);
   border: 1px solid var(--osa-border);
   border-radius: var(--osa-card-radius);
-  padding: 18px 22px;
-  transition: transform var(--osa-transition), box-shadow var(--osa-transition), border-color var(--osa-transition);
+  padding: 16px 18px;
+  transition: transform var(--osa-transition), box-shadow var(--osa-transition);
   cursor: default;
 }
 .osa-metric-card:hover {
   transform: var(--osa-card-hover-lift);
   box-shadow: var(--osa-card-hover-shadow);
-  border-color: var(--osa-color-info);
 }
 .osa-metric-card .metric-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   color: var(--osa-text-muted);
   margin-bottom: 6px;
 }
 .osa-metric-card .metric-value {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 600;
   color: var(--osa-text-primary);
   line-height: 1.2;
 }
@@ -164,7 +150,7 @@
   color: var(--osa-color-success);
 }
 .osa-metric-card .metric-threshold {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--osa-text-muted);
   margin-top: 4px;
 }
@@ -172,34 +158,33 @@
 /* ---- Stat grid ---- */
 .osa-stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
 }
 
 /* ---- Chart containers ---- */
 .osa-chart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 12px;
 }
 .osa-chart-card {
   background: var(--osa-surface);
   border: 1px solid var(--osa-border);
   border-radius: var(--osa-card-radius);
-  padding: 18px;
-  transition: box-shadow var(--osa-transition), border-color var(--osa-transition);
+  padding: 16px;
+  transition: box-shadow var(--osa-transition);
 }
 .osa-chart-card:hover {
   box-shadow: var(--osa-card-hover-shadow);
-  border-color: var(--osa-border-hover);
 }
 .osa-chart-card h3 {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--osa-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 /* ---- Domain cards ---- */
@@ -208,39 +193,38 @@
   border: 1px solid var(--osa-border);
   border-radius: var(--osa-card-radius);
   overflow: hidden;
-  transition: transform var(--osa-transition), box-shadow var(--osa-transition), border-color var(--osa-transition);
+  transition: transform var(--osa-transition), box-shadow var(--osa-transition);
 }
 .osa-domain-card:hover {
   transform: var(--osa-card-hover-lift);
   box-shadow: var(--osa-card-hover-shadow);
-  border-color: var(--osa-border-hover);
 }
 .osa-domain-card .card-header {
   background: var(--osa-gradient-dark);
-  color: #ffffff;
-  padding: 18px 22px;
+  color: #e2e8f0;
+  padding: 16px 20px;
 }
 .osa-domain-card .card-header h3 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   margin: 0;
-  letter-spacing: -0.2px;
+  color: #fff;
 }
 .osa-domain-card .card-header .region {
-  font-size: 12px;
-  opacity: 0.6;
-  margin-top: 3px;
+  font-size: 11px;
+  color: #a0aec0;
+  margin-top: 2px;
 }
 .osa-domain-card .card-body {
-  padding: 16px 22px;
+  padding: 14px 20px;
 }
 .osa-domain-card .card-body .stat-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 7px 0;
   border-bottom: 1px solid var(--osa-border);
-  font-size: 13px;
+  font-size: 12px;
 }
 .osa-domain-card .card-body .stat-row:last-child {
   border-bottom: none;
@@ -253,60 +237,60 @@
 /* ---- Chat bubbles ---- */
 .osa-chat-user {
   background: var(--osa-gradient-primary);
-  color: #fff;
-  border-radius: 16px 16px 4px 16px;
-  padding: 12px 16px;
-  margin-left: 48px;
-  max-width: 80%;
-  align-self: flex-end;
+  color: #e2e8f0;
+  border-radius: 12px 12px 2px 12px;
+  padding: 10px 14px;
+  margin-left: 40px;
+  max-width: 75%;
+  font-size: 13px;
 }
 .osa-chat-agent {
   background: var(--osa-surface-raised);
   border: 1px solid var(--osa-border);
-  border-radius: 16px 16px 16px 4px;
-  padding: 16px 20px;
-  margin-right: 48px;
-  max-width: 90%;
+  border-radius: 12px 12px 12px 2px;
+  padding: 14px 18px;
+  margin-right: 40px;
+  max-width: 88%;
 }
 
 /* ---- Pulse animation ---- */
 @keyframes osa-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.6; }
 }
 .osa-pulse {
-  animation: osa-pulse 1.5s ease-in-out infinite;
+  animation: osa-pulse 1.8s ease-in-out infinite;
 }
 
 /* ---- Fade-in animation ---- */
 @keyframes osa-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .osa-fade-in {
-  animation: osa-fade-in 0.25s ease-out;
+  animation: osa-fade-in 0.2s ease-out;
 }
 
 /* ---- Section headers ---- */
 .osa-section-header {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--osa-text-muted);
-  padding-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--osa-border);
-  margin-bottom: 14px;
-  margin-top: 8px;
+  margin-bottom: 12px;
+  margin-top: 6px;
 }
 
 /* ---- Scrollbar ---- */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--osa-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--osa-text-muted); }
 
 /* ---- Smooth page transitions ---- */
 main, [class*="awsui_content"] {
-  animation: osa-fade-in 0.2s ease-out;
+  animation: osa-fade-in 0.15s ease-out;
 }
