@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AssignPolicyModal } from "../components/AssignPolicyModal.js";
 import Alert from "@cloudscape-design/components/alert";
 import Badge from "@cloudscape-design/components/badge";
 import Box from "@cloudscape-design/components/box";
@@ -68,6 +69,7 @@ export function PoliciesPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [importYaml, setImportYaml] = useState("");
+  const [assignOpen, setAssignOpen] = useState(false);
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.deleteSopRuleSet(id),
@@ -105,6 +107,7 @@ export function PoliciesPage() {
             <SpaceBetween direction="horizontal" size="xs">
               <Button onClick={() => setImportOpen(true)}>Import YAML</Button>
               <Button disabled={selected.length !== 1} onClick={handleExport}>Export YAML</Button>
+              <Button disabled={selected.length !== 1} onClick={() => setAssignOpen(true)}>Apply to domains</Button>
               <Button disabled={selected.length !== 1} onClick={() => selected[0] && deleteMutation.mutate(selected[0].id)} loading={deleteMutation.isPending}>Delete</Button>
               <Button variant="primary" onClick={() => setCreateOpen(true)}>Create rule set</Button>
             </SpaceBetween>
@@ -177,6 +180,14 @@ export function PoliciesPage() {
             )}
           </SpaceBetween>
         </Modal>
+
+        {assignOpen && selected[0] && (
+          <AssignPolicyModal
+            ruleSet={selected[0]}
+            visible={assignOpen}
+            onDismiss={() => setAssignOpen(false)}
+          />
+        )}
       </SpaceBetween>
     </ContentLayout>
   );

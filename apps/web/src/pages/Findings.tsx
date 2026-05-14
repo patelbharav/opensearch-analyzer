@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { useDomainSelection } from "../useDomainSelection.js";
 import Alert from "@cloudscape-design/components/alert";
 import AppLayout from "@cloudscape-design/components/app-layout";
@@ -28,12 +29,28 @@ const SEVERITY_BADGE: Record<Severity, "red" | "severity-high" | "severity-mediu
 
 export function FindingsPage() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const { domains, selectedDomainId, setSelectedDomainId } = useDomainSelection();
   const effectiveDomainId = selectedDomainId;
-  // Track only the id — the finding object itself comes from the live query
-  // cache, so it always reflects the latest appliedAt / lastFixResult.
   const [selectedFindingId, setSelectedFindingId] = useState<string | null>(null);
   const [fixTargetId, setFixTargetId] = useState<string | null>(null);
+
+  // Load active SOP policies for the selected domain.
+  const sopQuery = useQuery({
+    queryKey: ["sop"],
+    queryFn: () => api.listSopRuleSets(),
+  });
+  const allPolicies = sopQuery.data?.ruleSets ?? [];
+  const activePolicies = useMemo(
+    () =>
+      allPolicies.filter(
+        (rs) =>
+          rs.enabled &&
+          (rs.domainIds.length === 0 ||
+            (effectiveDomainId && rs.domainIds.includes(effectiveDomainId))),
+      ),
+    [allPolicies, effectiveDomainId],
+  );
 
   const findingsQuery = useQuery({
     queryKey: ["findings", effectiveDomainId],
@@ -170,6 +187,25 @@ export function FindingsPage() {
                 <CountBox label="Medium" count={counts.medium} severity="medium" />
                 <CountBox label="Low" count={counts.low} severity="low" />
               </ColumnLayout>
+            </Container>
+
+            {/* Active policies indicator */}
+            <Container>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <SpaceBetween direction="horizontal" size="xs" alignItems="center">
+                  <Box variant="awsui-key-label">Custom policies:</Box>
+                  {activePolicies.length === 0 ? (
+                    <Box color="text-body-secondary">None applied to this domain</Box>
+                  ) : (
+                    activePolicies.map((p) => (
+                      <Badge key={p.id} color="blue">{p.name} ({p.rules.length} rules)</Badge>
+                    ))
+                  )}
+                </SpaceBetween>
+                <Button variant="link" onClick={() => navigate("/policies")}>
+                  Manage policies
+                </Button>
+              </div>
             </Container>
 
             {scanMutation.isError && (
