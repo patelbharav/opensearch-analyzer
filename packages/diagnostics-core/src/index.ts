@@ -88,3 +88,4 @@ export function runAllDiagnostics(
 }
 
 export { newFindingId } from "./util.js";
+export { evaluateSopRuleSet, type SopEvalContext } from "./sopEvaluator.js";

@@ -7,6 +7,7 @@ import { DomainsPage } from "./pages/Domains.js";
 import { OverviewPage } from "./pages/Overview.js";
 import { FindingsPage } from "./pages/Findings.js";
 import { ChatPage } from "./pages/Chat.js";
+import { PoliciesPage } from "./pages/Policies.js";
 import { SettingsPage } from "./pages/Settings.js";
 import { detectEmbedded, EmbedContext, useParentDomainArn } from "./embed.js";
 
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
   { type: "link" as const, text: "Overview", href: "/overview" },
   { type: "link" as const, text: "Findings", href: "/findings" },
   { type: "link" as const, text: "Chat", href: "/chat" },
+  { type: "link" as const, text: "Policies", href: "/policies" },
   { type: "link" as const, text: "Settings", href: "/settings" },
 ];
 
@@ -43,6 +45,7 @@ export function App() {
       <Route path="/overview" element={<OverviewPage />} />
       <Route path="/findings" element={<FindingsPage />} />
       <Route path="/chat" element={<ChatPage />} />
+      <Route path="/policies" element={<PoliciesPage />} />
       <Route path="/settings" element={<SettingsPage />} />
     </Routes>
   );

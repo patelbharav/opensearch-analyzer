@@ -5,6 +5,7 @@ import type {
   Finding,
   FixResult,
   ScanResult,
+  SopRuleSet,
   UpdateSettingsRequest,
 } from "@osa/shared-types";
 import type { ClusterMetrics } from "@osa/diagnostics-core";
@@ -69,5 +70,25 @@ export const api = {
     http<AppSettings>("/settings", {
       method: "PUT",
       body: JSON.stringify(body),
+    }),
+  // SOP
+  listSopRuleSets: () => http<{ ruleSets: SopRuleSet[] }>("/sop"),
+  getSopRuleSet: (id: string) => http<SopRuleSet>(`/sop/${encodeURIComponent(id)}`),
+  createSopRuleSet: (body: Omit<SopRuleSet, "id" | "createdAt" | "updatedAt">) =>
+    http<SopRuleSet>("/sop", { method: "POST", body: JSON.stringify(body) }),
+  updateSopRuleSet: (id: string, body: SopRuleSet) =>
+    http<SopRuleSet>(`/sop/${encodeURIComponent(id)}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+  deleteSopRuleSet: (id: string) =>
+    http<void>(`/sop/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  exportSopYaml: (id: string) =>
+    fetch(`${BASE}/sop/${encodeURIComponent(id)}/export`).then((r) => r.text()),
+  importSopYaml: (yaml: string) =>
+    http<SopRuleSet>("/sop/import", {
+      method: "POST",
+      body: yaml,
+      headers: { "content-type": "text/yaml" } as Record<string, string>,
     }),
 };

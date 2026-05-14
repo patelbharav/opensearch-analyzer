@@ -188,3 +188,94 @@ export interface UpdateSettingsRequest {
     apiKey?: string;
   };
 }
+
+// ---- SOP (Standard Operating Procedures) ----
+
+export type SopRuleKind = "threshold" | "policy" | "naming";
+
+/**
+ * Override a built-in diagnostic's threshold. E.g. "JVM warn at 70% not 80%".
+ */
+export interface ThresholdOverride {
+  kind: "threshold";
+  /** Must match a diagnosticId (e.g. "jvm-pressure", "cpu-utilization"). */
+  diagnosticId: string;
+  /** The new threshold value (same unit as the original). */
+  value: number;
+  /** Optional severity override for this threshold. */
+  severity?: Severity;
+  description?: string;
+}
+
+export type PolicyOperator =
+  | "eq" | "neq"
+  | "gt" | "gte" | "lt" | "lte"
+  | "contains" | "not_contains"
+  | "matches";
+
+export type PolicyTarget =
+  | "index.replicas"
+  | "index.primaryShards"
+  | "index.fieldCount"
+  | "index.ageInDays"
+  | "index.storeSizeBytes"
+  | "index.shardSizeBytes"
+  | "index.name"
+  | "index.hasIsmPolicy"
+  | "node.heapUsedPercent"
+  | "node.cpuPercent"
+  | "node.diskPercent"
+  | "cluster.dataNodeCount"
+  | "cluster.totalShards";
+
+/**
+ * A custom if-then rule. E.g. "all prod indices must have replicas >= 2".
+ */
+export interface CustomPolicy {
+  kind: "policy";
+  /** Human-readable name shown in findings. */
+  name: string;
+  description?: string;
+  severity: Severity;
+  /** Which entity the rule applies to — "index" rules run per-index, others run once. */
+  scope: "index" | "node" | "cluster";
+  /** Index-name pattern to filter which indices this applies to (glob). Ignored for node/cluster scope. */
+  indexPattern?: string;
+  /** The condition: "target operator value". */
+  target: PolicyTarget;
+  operator: PolicyOperator;
+  value: string | number | boolean;
+  /** Message shown in the finding if violated. */
+  message: string;
+  /** Optional fix steps. */
+  fixSteps?: string[];
+}
+
+/**
+ * Enforce index naming conventions via regex.
+ */
+export interface NamingConvention {
+  kind: "naming";
+  name: string;
+  description?: string;
+  severity: Severity;
+  /** Regex the index name must match. */
+  pattern: string;
+  /** Index-name glob for which indices to check (e.g. "*" or "logs-*"). */
+  appliesTo: string;
+  message: string;
+}
+
+export type SopRule = ThresholdOverride | CustomPolicy | NamingConvention;
+
+export interface SopRuleSet {
+  id: string;
+  name: string;
+  description?: string;
+  /** Which domains this applies to. Empty = all domains. */
+  domainIds: string[];
+  rules: SopRule[];
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

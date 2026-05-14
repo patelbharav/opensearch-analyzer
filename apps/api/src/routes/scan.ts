@@ -1,8 +1,9 @@
 import { randomUUID } from "node:crypto";
 import type { FastifyPluginAsync } from "fastify";
 import type { ScanResult } from "@osa/shared-types";
-import { runAllDiagnostics } from "@osa/diagnostics-core";
+import { runAllDiagnostics, evaluateSopRuleSet } from "@osa/diagnostics-core";
 import { getDomain } from "../persistence/dynamo.js";
+import { getActiveSopRuleSets } from "../persistence/sop.js";
 import {
   putFindings,
   putScan,
@@ -43,7 +44,20 @@ export const scanRoutes: FastifyPluginAsync = async (app) => {
       });
     }
 
-    const findings = runAllDiagnostics(snapshot, { domainId, now: startedAt });
+    const builtInFindings = runAllDiagnostics(snapshot, { domainId, now: startedAt });
+
+    // Evaluate SOP rule sets against the same snapshot.
+    let sopFindings: import("@osa/shared-types").Finding[] = [];
+    try {
+      const activeRuleSets = await getActiveSopRuleSets(domainId);
+      sopFindings = activeRuleSets.flatMap((rs) =>
+        evaluateSopRuleSet(snapshot, rs, { domainId, now: startedAt }),
+      );
+    } catch (err) {
+      req.log.warn({ err }, "SOP evaluation failed — skipping");
+    }
+
+    const findings = [...builtInFindings, ...sopFindings];
 
     const completedAt = new Date();
     const result: ScanResult = {
