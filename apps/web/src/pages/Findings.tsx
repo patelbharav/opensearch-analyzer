@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEmbed } from "../embed.js";
+import { useDomainSelection } from "../useDomainSelection.js";
 import Alert from "@cloudscape-design/components/alert";
 import AppLayout from "@cloudscape-design/components/app-layout";
 import Badge from "@cloudscape-design/components/badge";
@@ -28,27 +28,12 @@ const SEVERITY_BADGE: Record<Severity, "red" | "severity-high" | "severity-mediu
 
 export function FindingsPage() {
   const qc = useQueryClient();
-  const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
+  const { domains, selectedDomainId, setSelectedDomainId } = useDomainSelection();
+  const effectiveDomainId = selectedDomainId;
   // Track only the id — the finding object itself comes from the live query
   // cache, so it always reflects the latest appliedAt / lastFixResult.
   const [selectedFindingId, setSelectedFindingId] = useState<string | null>(null);
   const [fixTargetId, setFixTargetId] = useState<string | null>(null);
-
-  const domainsQuery = useQuery({
-    queryKey: ["domains"],
-    queryFn: () => api.listDomains(),
-  });
-  const domains = domainsQuery.data?.domains ?? [];
-
-  const { parentDomainArn } = useEmbed();
-  useEffect(() => {
-    if (!parentDomainArn) return;
-    const match = domains.find((d) => d.arn === parentDomainArn);
-    if (match) setSelectedDomainId(match.id);
-  }, [parentDomainArn, domains]);
-
-  const effectiveDomainId =
-    selectedDomainId ?? (domains.length > 0 ? domains[0]!.id : null);
 
   const findingsQuery = useQuery({
     queryKey: ["findings", effectiveDomainId],

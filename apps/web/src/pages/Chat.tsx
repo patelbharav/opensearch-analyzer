@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useQuery } from "@tanstack/react-query";
 import Alert from "@cloudscape-design/components/alert";
 import Box from "@cloudscape-design/components/box";
 import Button from "@cloudscape-design/components/button";
@@ -13,8 +12,7 @@ import Select, { type SelectProps } from "@cloudscape-design/components/select";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import Textarea from "@cloudscape-design/components/textarea";
-import { api } from "../api.js";
-import { useEmbed } from "../embed.js";
+import { useDomainSelection } from "../useDomainSelection.js";
 import { Markdown } from "../components/Markdown.js";
 
 const SUGGESTED_PROMPTS = [
@@ -31,20 +29,8 @@ type UIPart =
 type UIMsg = { id: string; role: string; parts?: unknown[] };
 
 export function ChatPage() {
-  const domainsQuery = useQuery({
-    queryKey: ["domains"],
-    queryFn: () => api.listDomains(),
-  });
-  const domains = domainsQuery.data?.domains ?? [];
-  const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
-  const { parentDomainArn } = useEmbed();
-  useEffect(() => {
-    if (!parentDomainArn) return;
-    const match = domains.find((d) => d.arn === parentDomainArn);
-    if (match) setSelectedDomainId(match.id);
-  }, [parentDomainArn, domains]);
-  const effectiveDomainId =
-    selectedDomainId ?? (domains.length > 0 ? domains[0]!.id : null);
+  const { domains, selectedDomainId, setSelectedDomainId } = useDomainSelection();
+  const effectiveDomainId = selectedDomainId;
 
   const transport = useMemo(
     () =>

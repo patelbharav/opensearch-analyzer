@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useEmbed } from "../embed.js";
+import { useDomainSelection } from "../useDomainSelection.js";
 import Badge from "@cloudscape-design/components/badge";
 import Box from "@cloudscape-design/components/box";
 import ColumnLayout from "@cloudscape-design/components/column-layout";
@@ -27,20 +27,8 @@ const WINDOW_OPTIONS: SegmentedControlProps.Option[] = [
 ];
 
 export function OverviewPage() {
-  const domainsQuery = useQuery({
-    queryKey: ["domains"],
-    queryFn: () => api.listDomains(),
-  });
-  const domains = domainsQuery.data?.domains ?? [];
-  const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
-  const { parentDomainArn } = useEmbed();
-  useEffect(() => {
-    if (!parentDomainArn) return;
-    const match = domains.find((d) => d.arn === parentDomainArn);
-    if (match) setSelectedDomainId(match.id);
-  }, [parentDomainArn, domains]);
-  const effectiveDomainId =
-    selectedDomainId ?? (domains.length > 0 ? domains[0]!.id : null);
+  const { domains, selectedDomainId, setSelectedDomainId } = useDomainSelection();
+  const effectiveDomainId = selectedDomainId;
 
   const [window, setWindow] = useState<WindowKey>("24h");
 
