@@ -58,6 +58,14 @@ export interface MetricSeriesSet {
   /** Cluster status: 0 = green, 1 = yellow, 2 = red. */
   clusterStatusRed: Series;
   clusterStatusYellow: Series;
+  /** Max automated snapshot failures. */
+  automatedSnapshotFailure: Series;
+  /** Min EBS burst balance (%). */
+  burstBalance: Series;
+  /** Sum of search thread pool rejections. */
+  threadpoolSearchRejected: Series;
+  /** Sum of write thread pool rejections. */
+  threadpoolWriteRejected: Series;
 }
 
 export interface FetchOpts {
@@ -98,6 +106,10 @@ export async function fetchMetrics(opts: FetchOpts): Promise<MetricSeriesSet> {
     metricQuery("freeStorageSpace",   "FreeStorageSpace",   "Minimum", spec.periodSec, dimensions),
     metricQuery("clusterStatusRed",    "ClusterStatus.red",    "Maximum", spec.periodSec, dimensions),
     metricQuery("clusterStatusYellow", "ClusterStatus.yellow", "Maximum", spec.periodSec, dimensions),
+    metricQuery("automatedSnapshotFailure", "AutomatedSnapshotFailure", "Maximum", spec.periodSec, dimensions),
+    metricQuery("burstBalance",        "BurstBalance",         "Minimum", spec.periodSec, dimensions),
+    metricQuery("threadpoolSearchRejected", "ThreadpoolSearchRejected", "Sum", spec.periodSec, dimensions),
+    metricQuery("threadpoolWriteRejected",  "ThreadpoolWriteRejected",  "Sum", spec.periodSec, dimensions),
   ];
 
   const cw = clientFor(domain.region);
@@ -129,6 +141,10 @@ export async function fetchMetrics(opts: FetchOpts): Promise<MetricSeriesSet> {
     freeStorageSpace: out.freeStorageSpace ?? [],
     clusterStatusRed: out.clusterStatusRed ?? [],
     clusterStatusYellow: out.clusterStatusYellow ?? [],
+    automatedSnapshotFailure: out.automatedSnapshotFailure ?? [],
+    burstBalance: out.burstBalance ?? [],
+    threadpoolSearchRejected: out.threadpoolSearchRejected ?? [],
+    threadpoolWriteRejected: out.threadpoolWriteRejected ?? [],
   };
 }
 

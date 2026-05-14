@@ -14,18 +14,30 @@ import { diskSpace } from "./diagnostics/diskSpace.js";
 import { http5xxRate } from "./diagnostics/http5xxRate.js";
 import { indexingLatency } from "./diagnostics/indexingLatency.js";
 import { searchLatency } from "./diagnostics/searchLatency.js";
+import { threadPoolRejections } from "./diagnostics/threadPoolRejections.js";
+import { mappingExplosion } from "./diagnostics/mappingExplosion.js";
+import { ismHealth } from "./diagnostics/ismHealth.js";
+import { snapshotFailures } from "./diagnostics/snapshotFailures.js";
+import { circuitBreakers } from "./diagnostics/circuitBreakers.js";
+import { ebsBurstBalance } from "./diagnostics/ebsBurstBalance.js";
+import { searchBackpressure } from "./diagnostics/searchBackpressure.js";
+import { stuckProcessing } from "./diagnostics/stuckProcessing.js";
 
 export type { ClusterSnapshot } from "./snapshot.js";
 export type {
+  BreakerStats,
   CatAllocation,
   CatIndex,
   CatShard,
   ClusterHealth,
   ClusterMetrics,
+  IndexFieldCount,
+  IsmStatus,
   MetricSeries,
   MetricDataPoint,
   NodeStat,
   NodesStats,
+  ThreadPoolStats,
 } from "./snapshot.js";
 
 export interface DiagnosticContext {
@@ -57,6 +69,15 @@ export const diagnostics: DiagnosticDef[] = [
   http5xxRate,
   indexingLatency,
   searchLatency,
+  // New high-priority diagnostics
+  threadPoolRejections,
+  mappingExplosion,
+  ismHealth,
+  snapshotFailures,
+  circuitBreakers,
+  ebsBurstBalance,
+  searchBackpressure,
+  stuckProcessing,
 ];
 
 export function runAllDiagnostics(

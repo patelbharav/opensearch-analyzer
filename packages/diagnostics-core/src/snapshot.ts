@@ -101,6 +101,43 @@ export interface ClusterMetrics {
   freeStorageSpace: MetricSeries;
   clusterStatusRed: MetricSeries;
   clusterStatusYellow: MetricSeries;
+  automatedSnapshotFailure: MetricSeries;
+  burstBalance: MetricSeries;
+  threadpoolSearchRejected: MetricSeries;
+  threadpoolWriteRejected: MetricSeries;
+}
+
+/** GET /_nodes/stats/thread_pool */
+export interface ThreadPoolStats {
+  nodeName: string;
+  search: { rejected: number; completed: number; queue: number };
+  write: { rejected: number; completed: number; queue: number };
+}
+
+/** GET /_nodes/stats/breaker */
+export interface BreakerStats {
+  nodeName: string;
+  breakers: Record<string, {
+    limit_size_in_bytes: number;
+    estimated_size_in_bytes: number;
+    tripped: number;
+  }>;
+}
+
+/** Per-index field count from GET /<index>/_mapping */
+export interface IndexFieldCount {
+  index: string;
+  fieldCount: number;
+  fieldLimit: number;
+}
+
+/** Per-index ISM status from GET /_plugins/_ism/explain */
+export interface IsmStatus {
+  index: string;
+  policyId: string | null;
+  state: string | null;
+  failed: boolean;
+  info?: string;
 }
 
 export interface ClusterSnapshot {
@@ -113,4 +150,12 @@ export interface ClusterSnapshot {
   catAllocation: CatAllocation[];
   /** Optional — present only when the scan was passed CloudWatch credentials. */
   metrics?: ClusterMetrics;
+  /** Thread pool rejection/queue stats per node. */
+  threadPoolStats?: ThreadPoolStats[];
+  /** Circuit breaker stats per node. */
+  breakerStats?: BreakerStats[];
+  /** Field counts per non-system index. */
+  indexFieldCounts?: IndexFieldCount[];
+  /** ISM policy status per index. */
+  ismStatuses?: IsmStatus[];
 }
