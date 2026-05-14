@@ -141,14 +141,13 @@ export function PoliciesPage() {
             {
               id: "domains", header: "Applies to",
               cell: (r) => {
-                if (r.domainIds.length === 0) return <Badge color="blue">All domains</Badge>;
+                if (r.domainIds.length === 0) return <Box color="text-body-secondary">Not assigned</Box>;
                 const names = r.domainIds
                   .map((id) => (domainsQuery.data?.domains ?? []).find((d) => d.id === id)?.name)
                   .filter(Boolean);
                 return (
                   <SpaceBetween direction="horizontal" size="xxs">
                     {names.map((n) => <Badge key={n}>{n}</Badge>)}
-                    {names.length === 0 && <Box color="text-body-secondary">Unassigned</Box>}
                   </SpaceBetween>
                 );
               },

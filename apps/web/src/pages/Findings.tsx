@@ -46,8 +46,8 @@ export function FindingsPage() {
       allPolicies.filter(
         (rs) =>
           rs.enabled &&
-          (rs.domainIds.length === 0 ||
-            (effectiveDomainId && rs.domainIds.includes(effectiveDomainId))),
+          effectiveDomainId &&
+          rs.domainIds.includes(effectiveDomainId),
       ),
     [allPolicies, effectiveDomainId],
   );

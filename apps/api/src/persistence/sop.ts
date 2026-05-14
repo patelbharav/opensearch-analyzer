@@ -49,9 +49,7 @@ export async function deleteSopRuleSet(id: string): Promise<void> {
 export async function getActiveSopRuleSets(domainId: string): Promise<SopRuleSet[]> {
   const all = await listSopRuleSets();
   return all.filter(
-    (rs) =>
-      rs.enabled &&
-      (rs.domainIds.length === 0 || rs.domainIds.includes(domainId)),
+    (rs) => rs.enabled && rs.domainIds.includes(domainId),
   );
 }
 

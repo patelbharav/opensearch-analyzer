@@ -26,20 +26,16 @@ export function AssignPolicyModal({ ruleSet, visible, onDismiss }: Props) {
   const domains = domainsQuery.data?.domains ?? [];
 
   const [selectedIds, setSelectedIds] = useState<string[]>(ruleSet.domainIds);
-  const [applyToAll, setApplyToAll] = useState(false);
 
   useEffect(() => {
     setSelectedIds(ruleSet.domainIds);
-    // Only show "All domains" as checked if it was explicitly saved that way
-    // (domainIds empty AND policy has been updated at least once).
-    setApplyToAll(ruleSet.domainIds.length === 0 && !!ruleSet.updatedAt && ruleSet.updatedAt !== ruleSet.createdAt);
   }, [ruleSet]);
 
   const saveMutation = useMutation({
     mutationFn: () =>
       api.updateSopRuleSet(ruleSet.id, {
         ...ruleSet,
-        domainIds: applyToAll ? [] : selectedIds,
+        domainIds: selectedIds,
       }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["sop"] });
@@ -51,13 +47,11 @@ export function AssignPolicyModal({ ruleSet, visible, onDismiss }: Props) {
     setSelectedIds((prev) =>
       checked ? [...prev, id] : prev.filter((d) => d !== id),
     );
-    if (checked) setApplyToAll(false);
   };
 
-  // Current assignment summary
-  const currentAssignment = ruleSet.domainIds.length === 0
-    ? "Currently applies to: All domains"
-    : `Currently applies to: ${ruleSet.domainIds.length} domain(s)`;
+  const selectAll = () => setSelectedIds(domains.map((d) => d.id));
+  const clearAll = () => setSelectedIds([]);
+
   const assignedDomainNames = ruleSet.domainIds
     .map((id) => domains.find((d) => d.id === id)?.name)
     .filter(Boolean);
@@ -75,11 +69,11 @@ export function AssignPolicyModal({ ruleSet, visible, onDismiss }: Props) {
               variant="primary"
               onClick={() => saveMutation.mutate()}
               loading={saveMutation.isPending}
-              disabled={!applyToAll && selectedIds.length === 0}
+              disabled={selectedIds.length === 0}
             >
-              {!applyToAll && selectedIds.length === 0
+              {selectedIds.length === 0
                 ? "Select at least one domain"
-                : "Save assignment"}
+                : `Apply to ${selectedIds.length} domain${selectedIds.length > 1 ? "s" : ""}`}
             </Button>
           </SpaceBetween>
         </Box>
@@ -88,18 +82,16 @@ export function AssignPolicyModal({ ruleSet, visible, onDismiss }: Props) {
       <SpaceBetween size="m">
         {/* Current assignment */}
         <Box>
-          <Box variant="awsui-key-label">Current assignment</Box>
-          <SpaceBetween direction="horizontal" size="xs">
-            {ruleSet.domainIds.length === 0 ? (
-              <Badge color="blue">All domains</Badge>
-            ) : assignedDomainNames.length > 0 ? (
-              assignedDomainNames.map((name) => (
+          <Box variant="awsui-key-label">Currently applied to</Box>
+          {assignedDomainNames.length > 0 ? (
+            <SpaceBetween direction="horizontal" size="xs">
+              {assignedDomainNames.map((name) => (
                 <Badge key={name}>{name}</Badge>
-              ))
-            ) : (
-              <Box color="text-body-secondary">Not assigned to any domain</Box>
-            )}
-          </SpaceBetween>
+              ))}
+            </SpaceBetween>
+          ) : (
+            <Box color="text-body-secondary">Not applied to any domain yet</Box>
+          )}
         </Box>
 
         <hr style={{ border: "none", borderTop: "1px solid var(--osa-border, #e5e7eb)", margin: "4px 0" }} />
@@ -110,40 +102,35 @@ export function AssignPolicyModal({ ruleSet, visible, onDismiss }: Props) {
           </Alert>
         )}
 
-        <Box variant="awsui-key-label">New assignment</Box>
+        <Box>
+          <Box variant="awsui-key-label">Select domains to apply this policy</Box>
+          <Box variant="small" color="text-body-secondary" margin={{ bottom: "xs" }}>
+            The policy will only be evaluated during scans for the selected domains.
+          </Box>
+        </Box>
 
-        <Checkbox
-          checked={applyToAll}
-          onChange={(e) => {
-            setApplyToAll(e.detail.checked);
-            if (e.detail.checked) setSelectedIds([]);
-          }}
-        >
-          <strong>All domains</strong> — evaluate on every scan regardless of domain
-        </Checkbox>
+        <SpaceBetween direction="horizontal" size="xs">
+          <Button variant="link" onClick={selectAll}>Select all</Button>
+          <Button variant="link" onClick={clearAll}>Clear all</Button>
+        </SpaceBetween>
 
-        {!applyToAll && (
-          <>
-            <Box variant="awsui-key-label" margin={{ top: "s" }}>
-              Select specific domains
-            </Box>
-            <SpaceBetween size="xs">
-              {domains.length === 0 ? (
-                <StatusIndicator type="warning">No domains connected yet. Add a domain first.</StatusIndicator>
-              ) : (
-                domains.map((d) => (
-                  <Checkbox
-                    key={d.id}
-                    checked={selectedIds.includes(d.id)}
-                    onChange={(e) => toggleDomain(d.id, e.detail.checked)}
-                  >
-                    <strong>{d.name}</strong>
-                    <Box variant="small" display="inline" color="text-body-secondary"> — {d.region} ({d.authMode})</Box>
-                  </Checkbox>
-                ))
-              )}
-            </SpaceBetween>
-          </>
+        {domains.length === 0 ? (
+          <StatusIndicator type="warning">No domains connected. Add a domain first.</StatusIndicator>
+        ) : (
+          <SpaceBetween size="xs">
+            {domains.map((d) => (
+              <Checkbox
+                key={d.id}
+                checked={selectedIds.includes(d.id)}
+                onChange={(e) => toggleDomain(d.id, e.detail.checked)}
+              >
+                <strong>{d.name}</strong>
+                <Box variant="small" display="inline" color="text-body-secondary">
+                  {" "} — {d.region} ({d.authMode === "sigv4" ? "SigV4/IAM" : d.authMode})
+                </Box>
+              </Checkbox>
+            ))}
+          </SpaceBetween>
         )}
       </SpaceBetween>
     </Modal>
