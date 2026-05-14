@@ -189,6 +189,29 @@ export interface UpdateSettingsRequest {
   };
 }
 
+// ---- Users & Action History ----
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  displayName: string;
+  role: "admin" | "operator" | "viewer";
+  createdAt: string;
+  lastLoginAt?: string;
+}
+
+export interface ActionRecord {
+  id: string;
+  userId: string;
+  username: string;
+  action: "scan" | "fix_applied" | "fix_failed" | "domain_added" | "domain_deleted" | "sop_created" | "sop_updated" | "sop_deleted" | "settings_changed" | "login";
+  description: string;
+  domainId?: string;
+  findingId?: string;
+  metadata?: Record<string, unknown>;
+  timestamp: string;
+}
+
 // ---- SOP (Standard Operating Procedures) ----
 
 export type SopRuleKind = "threshold" | "policy" | "naming";

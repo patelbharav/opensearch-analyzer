@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AppLayout from "@cloudscape-design/components/app-layout";
 import SideNavigation from "@cloudscape-design/components/side-navigation";
@@ -9,7 +9,10 @@ import { FindingsPage } from "./pages/Findings.js";
 import { ChatPage } from "./pages/Chat.js";
 import { PoliciesPage } from "./pages/Policies.js";
 import { SettingsPage } from "./pages/Settings.js";
+import { ProfilePage } from "./pages/Profile.js";
 import { detectEmbedded, EmbedContext, useParentDomainArn } from "./embed.js";
+import { useAuth } from "./auth.js";
+import { LoginModal } from "./components/LoginModal.js";
 
 const NAV_ITEMS = [
   { type: "link" as const, text: "Domains", href: "/domains" },
@@ -23,6 +26,8 @@ const NAV_ITEMS = [
 export function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
+  const [loginOpen, setLoginOpen] = useState(false);
 
   const embedded = useMemo(() => detectEmbedded(), []);
   const { parentOrigin, parentDomainArn } = useParentDomainArn(embedded);
@@ -46,6 +51,7 @@ export function App() {
       <Route path="/findings" element={<FindingsPage />} />
       <Route path="/chat" element={<ChatPage />} />
       <Route path="/policies" element={<PoliciesPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/settings" element={<SettingsPage />} />
     </Routes>
   );
@@ -68,15 +74,35 @@ export function App() {
     <EmbedContext.Provider value={ctxValue}>
       <TopNavigation
         identity={{ href: "/", title: "OpenSearch Analyzer" }}
-        utilities={[
-          {
-            type: "button",
-            iconName: "user-profile",
-            text: "Sign in",
-            ariaLabel: "Sign in",
-          },
-        ]}
+        utilities={
+          user
+            ? [
+                {
+                  type: "menu-dropdown",
+                  iconName: "user-profile",
+                  text: user.displayName,
+                  items: [
+                    { id: "profile", text: "Profile & History" },
+                    { id: "logout", text: "Sign out" },
+                  ],
+                  onItemClick: (e) => {
+                    if (e.detail.id === "logout") logout();
+                    if (e.detail.id === "profile") navigate("/profile");
+                  },
+                },
+              ]
+            : [
+                {
+                  type: "button",
+                  iconName: "user-profile",
+                  text: "Sign in",
+                  ariaLabel: "Sign in",
+                  onClick: () => setLoginOpen(true),
+                },
+              ]
+        }
       />
+      <LoginModal visible={loginOpen} onDismiss={() => setLoginOpen(false)} />
       <AppLayout
         navigation={
           <SideNavigation

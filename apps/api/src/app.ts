@@ -13,6 +13,7 @@ import { chatRoutes } from "./routes/chat.js";
 import { metricsRoutes } from "./routes/metrics.js";
 import { settingsRoutes } from "./routes/settings.js";
 import { sopRoutes } from "./routes/sop.js";
+import { authRoutes } from "./routes/auth.js";
 
 export async function buildApp(config: AppConfig = loadConfig()): Promise<FastifyInstance> {
   const app = Fastify({
@@ -58,6 +59,7 @@ export async function buildApp(config: AppConfig = loadConfig()): Promise<Fastif
   await app.register(metricsRoutes, { prefix: "/api/metrics" });
   await app.register(settingsRoutes, { prefix: "/api/settings" });
   await app.register(sopRoutes, { prefix: "/api/sop" });
+  await app.register(authRoutes, { prefix: "/api/auth" });
 
   return app;
 }

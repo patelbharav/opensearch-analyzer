@@ -87,5 +87,5 @@ export function runAllDiagnostics(
   return diagnostics.flatMap((d) => d.run(snapshot, ctx));
 }
 
-export { newFindingId } from "./util.js";
+export { newFindingId, makeFinding } from "./util.js";
 export { evaluateSopRuleSet, type SopEvalContext } from "./sopEvaluator.js";

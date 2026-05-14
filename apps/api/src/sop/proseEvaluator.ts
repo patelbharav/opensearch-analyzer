@@ -2,7 +2,7 @@ import { generateText } from "ai";
 import type { Finding, ProseRule, SopRuleSet } from "@osa/shared-types";
 import type { ClusterSnapshot } from "@osa/diagnostics-core";
 import { getModel } from "../agent/llm.js";
-import { makeFinding } from "@osa/diagnostics-core/src/util.js";
+import { makeFinding } from "@osa/diagnostics-core";
 
 /**
  * Evaluate prose (natural-language) SOP rules by asking the LLM to check the
@@ -46,7 +46,7 @@ ${snapshotSummary}
 
 Team policy rule: "${rule.name}"
 ${rule.description}`,
-        maxTokens: 300,
+        maxOutputTokens: 300,
       });
 
       const text = result.text.trim();

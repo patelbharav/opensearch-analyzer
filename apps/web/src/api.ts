@@ -1,4 +1,5 @@
 import type {
+  ActionRecord,
   AppSettings,
   CreateDomainRequest,
   Domain,
@@ -7,10 +8,23 @@ import type {
   ScanResult,
   SopRuleSet,
   UpdateSettingsRequest,
+  UserProfile,
 } from "@osa/shared-types";
 import type { ClusterMetrics } from "@osa/diagnostics-core";
 
 const BASE = "/api";
+
+const TOKEN_KEY = "osa-auth-token";
+
+export function getStoredToken(): string | null {
+  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+}
+export function setStoredToken(token: string | null): void {
+  try {
+    if (token) localStorage.setItem(TOKEN_KEY, token);
+    else localStorage.removeItem(TOKEN_KEY);
+  } catch { /* ignore */ }
+}
 
 export interface ConnectionTestResult {
   ok: boolean;
@@ -91,4 +105,24 @@ export const api = {
       body: yaml,
       headers: { "content-type": "text/yaml" } as Record<string, string>,
     }),
+  // Auth
+  login: (username: string, password: string) =>
+    http<{ user: UserProfile; token: string }>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+    }),
+  register: (username: string, password: string, displayName?: string) =>
+    http<{ user: UserProfile; token: string }>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ username, password, displayName }),
+    }),
+  getMe: () => {
+    const token = getStoredToken();
+    if (!token) return Promise.resolve(null);
+    return http<{ userId: string; username: string; role: string }>("/auth/me", {
+      headers: { Authorization: `Bearer ${token}` } as Record<string, string>,
+    }).catch(() => null);
+  },
+  listActions: (userId?: string) =>
+    http<{ actions: ActionRecord[] }>(`/auth/actions${userId ? `?userId=${userId}` : ""}`),
 };
