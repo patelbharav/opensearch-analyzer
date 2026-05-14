@@ -314,6 +314,18 @@ body, html {
 ::-webkit-scrollbar-thumb { background: var(--osa-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--osa-text-muted); }
 
+/* ---- Side navigation ---- */
+[class*="awsui_navigation-panel"],
+[class*="awsui_navigation_"] {
+  background: var(--osa-surface-raised) !important;
+  border-right: none !important;
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.04) !important;
+}
+.awsui-dark [class*="awsui_navigation-panel"],
+.awsui-dark [class*="awsui_navigation_"] {
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.2) !important;
+}
+
 /* ---- Smooth page transitions ---- */
 main, [class*="awsui_content"] {
   animation: osa-fade-in 0.15s ease-out;
