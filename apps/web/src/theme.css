@@ -1,79 +1,124 @@
 /* ---- OpenSearch Analyzer: Modern SaaS Theme ---- */
+/* Palette: indigo-blue primary, warm neutrals, restrained accents */
 
 :root {
-  --osa-gradient-primary: linear-gradient(135deg, #0073bb 0%, #00a3e0 50%, #00d4aa 100%);
-  --osa-gradient-dark: linear-gradient(135deg, #161e2d 0%, #1a2744 50%, #1e3a5f 100%);
-  --osa-gradient-accent: linear-gradient(135deg, #ff9900 0%, #ffb84d 100%);
-  --osa-gradient-danger: linear-gradient(135deg, #d13212 0%, #ff6b4a 100%);
-  --osa-gradient-success: linear-gradient(135deg, #037f0c 0%, #1db954 100%);
-  --osa-glass-bg: rgba(255, 255, 255, 0.7);
-  --osa-glass-border: rgba(255, 255, 255, 0.3);
-  --osa-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  /* Primary palette — indigo-to-blue, sophisticated and calm */
+  --osa-gradient-primary: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+  --osa-gradient-dark: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --osa-gradient-accent: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  --osa-gradient-danger: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  --osa-gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+
+  /* Surfaces */
+  --osa-surface: #ffffff;
+  --osa-surface-raised: #f8fafc;
+  --osa-surface-sunken: #f1f5f9;
+
+  /* Text */
+  --osa-text-primary: #1e293b;
+  --osa-text-secondary: #64748b;
+  --osa-text-muted: #94a3b8;
+
+  /* Borders */
+  --osa-border: #e2e8f0;
+  --osa-border-hover: #cbd5e1;
+
+  /* Glass / cards */
+  --osa-glass-bg: rgba(255, 255, 255, 0.8);
+  --osa-glass-border: rgba(226, 232, 240, 0.6);
+  --osa-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
   --osa-card-radius: 12px;
   --osa-card-hover-lift: translateY(-2px);
-  --osa-card-hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --osa-card-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   --osa-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --osa-surface: #ffffff;
-  --osa-surface-raised: #fafbfc;
-  --osa-text-primary: #16191f;
-  --osa-text-secondary: #545b64;
-  --osa-border: #e1e4e8;
+
+  /* Semantic status colors */
+  --osa-color-success: #10b981;
+  --osa-color-warning: #f59e0b;
+  --osa-color-danger: #ef4444;
+  --osa-color-info: #3b82f6;
 }
 
-/* Dark mode overrides */
+/* Dark mode */
 .awsui-dark {
-  --osa-glass-bg: rgba(30, 40, 60, 0.7);
-  --osa-glass-border: rgba(255, 255, 255, 0.08);
-  --osa-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --osa-card-hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-  --osa-surface: #0f1b2d;
-  --osa-surface-raised: #192231;
-  --osa-text-primary: #e9ebed;
-  --osa-text-secondary: #8d939b;
-  --osa-border: #2a3546;
+  --osa-gradient-primary: linear-gradient(135deg, #6366f1 0%, #60a5fa 100%);
+  --osa-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
+  --osa-surface: #0f172a;
+  --osa-surface-raised: #1e293b;
+  --osa-surface-sunken: #0c1220;
+
+  --osa-text-primary: #f1f5f9;
+  --osa-text-secondary: #94a3b8;
+  --osa-text-muted: #64748b;
+
+  --osa-border: #334155;
+  --osa-border-hover: #475569;
+
+  --osa-glass-bg: rgba(15, 23, 42, 0.8);
+  --osa-glass-border: rgba(51, 65, 85, 0.6);
+  --osa-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  --osa-card-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  --osa-color-success: #34d399;
+  --osa-color-warning: #fbbf24;
+  --osa-color-danger: #f87171;
+  --osa-color-info: #60a5fa;
 }
 
 /* ---- Hero banners ---- */
 .osa-hero {
   background: var(--osa-gradient-primary);
   border-radius: var(--osa-card-radius);
-  padding: 32px 40px;
+  padding: 36px 40px;
   color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   position: relative;
   overflow: hidden;
 }
 .osa-hero::before {
   content: "";
   position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  top: -60%;
+  right: -15%;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.osa-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -40%;
+  left: -10%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
   pointer-events: none;
 }
 .osa-hero h1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   margin: 0 0 8px;
+  letter-spacing: -0.3px;
 }
 .osa-hero p {
   font-size: 14px;
-  opacity: 0.9;
+  opacity: 0.85;
   margin: 0;
-  max-width: 600px;
+  max-width: 560px;
+  line-height: 1.5;
 }
 
 /* ---- Glass cards ---- */
 .osa-glass-card {
   background: var(--osa-glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--osa-glass-border);
   border-radius: var(--osa-card-radius);
   box-shadow: var(--osa-glass-shadow);
-  padding: 20px;
+  padding: 24px;
   transition: transform var(--osa-transition), box-shadow var(--osa-transition);
 }
 .osa-glass-card:hover {
@@ -86,73 +131,74 @@
   background: var(--osa-surface);
   border: 1px solid var(--osa-border);
   border-radius: var(--osa-card-radius);
-  padding: 16px 20px;
+  padding: 18px 22px;
   transition: transform var(--osa-transition), box-shadow var(--osa-transition), border-color var(--osa-transition);
   cursor: default;
 }
 .osa-metric-card:hover {
   transform: var(--osa-card-hover-lift);
   box-shadow: var(--osa-card-hover-shadow);
-  border-color: #0073bb;
+  border-color: var(--osa-color-info);
 }
 .osa-metric-card .metric-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--osa-text-secondary);
-  margin-bottom: 4px;
+  letter-spacing: 0.6px;
+  color: var(--osa-text-muted);
+  margin-bottom: 6px;
 }
 .osa-metric-card .metric-value {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--osa-text-primary);
   line-height: 1.2;
 }
 .osa-metric-card .metric-value.danger {
-  color: #d13212;
+  color: var(--osa-color-danger);
 }
 .osa-metric-card .metric-value.warning {
-  color: #ff9900;
+  color: var(--osa-color-warning);
 }
 .osa-metric-card .metric-value.success {
-  color: #037f0c;
+  color: var(--osa-color-success);
 }
 .osa-metric-card .metric-threshold {
   font-size: 11px;
-  color: var(--osa-text-secondary);
-  margin-top: 2px;
+  color: var(--osa-text-muted);
+  margin-top: 4px;
 }
 
 /* ---- Stat grid ---- */
 .osa-stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 
 /* ---- Chart containers ---- */
 .osa-chart-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 .osa-chart-card {
   background: var(--osa-surface);
   border: 1px solid var(--osa-border);
   border-radius: var(--osa-card-radius);
-  padding: 16px;
-  transition: box-shadow var(--osa-transition);
+  padding: 18px;
+  transition: box-shadow var(--osa-transition), border-color var(--osa-transition);
 }
 .osa-chart-card:hover {
   box-shadow: var(--osa-card-hover-shadow);
+  border-color: var(--osa-border-hover);
 }
 .osa-chart-card h3 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--osa-text-secondary);
+  color: var(--osa-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   margin: 0 0 12px;
 }
 
@@ -162,36 +208,37 @@
   border: 1px solid var(--osa-border);
   border-radius: var(--osa-card-radius);
   overflow: hidden;
-  transition: transform var(--osa-transition), box-shadow var(--osa-transition);
-  cursor: pointer;
+  transition: transform var(--osa-transition), box-shadow var(--osa-transition), border-color var(--osa-transition);
 }
 .osa-domain-card:hover {
   transform: var(--osa-card-hover-lift);
   box-shadow: var(--osa-card-hover-shadow);
+  border-color: var(--osa-border-hover);
 }
 .osa-domain-card .card-header {
   background: var(--osa-gradient-dark);
   color: #ffffff;
-  padding: 16px 20px;
+  padding: 18px 22px;
 }
 .osa-domain-card .card-header h3 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   margin: 0;
+  letter-spacing: -0.2px;
 }
 .osa-domain-card .card-header .region {
   font-size: 12px;
-  opacity: 0.7;
-  margin-top: 2px;
+  opacity: 0.6;
+  margin-top: 3px;
 }
 .osa-domain-card .card-body {
-  padding: 16px 20px;
+  padding: 16px 22px;
 }
 .osa-domain-card .card-body .stat-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--osa-border);
   font-size: 13px;
 }
@@ -200,6 +247,7 @@
 }
 .osa-domain-card .card-body .stat-label {
   color: var(--osa-text-secondary);
+  font-weight: 500;
 }
 
 /* ---- Chat bubbles ---- */
@@ -221,7 +269,7 @@
   max-width: 90%;
 }
 
-/* ---- Pulse animation for loading states ---- */
+/* ---- Pulse animation ---- */
 @keyframes osa-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -232,34 +280,31 @@
 
 /* ---- Fade-in animation ---- */
 @keyframes osa-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .osa-fade-in {
-  animation: osa-fade-in 0.3s ease-out;
+  animation: osa-fade-in 0.25s ease-out;
 }
 
 /* ---- Section headers ---- */
 .osa-section-header {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--osa-text-secondary);
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--osa-border);
-  margin-bottom: 16px;
+  letter-spacing: 1px;
+  color: var(--osa-text-muted);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--osa-border);
+  margin-bottom: 14px;
+  margin-top: 8px;
 }
 
-/* ---- Badge overrides for severity ---- */
-.osa-severity-critical { background: var(--osa-gradient-danger) !important; color: #fff !important; }
-.osa-severity-high { background: var(--osa-gradient-accent) !important; color: #16191f !important; }
-
-/* ---- Scrollbar styling ---- */
+/* ---- Scrollbar ---- */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--osa-border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--osa-text-secondary); }
+::-webkit-scrollbar-thumb:hover { background: var(--osa-text-muted); }
 
 /* ---- Smooth page transitions ---- */
 main, [class*="awsui_content"] {
