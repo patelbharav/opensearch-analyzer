@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+**/dist
+**/build
+.git
+.env
+.env.local
+*.log
+coverage
+# CDK staging — do NOT include in the Docker build context.
+infra/cdk/cdk.out
+infra/cdk/dist
+**/cdk.out
+.cdk.staging
+**/.cdk.staging
