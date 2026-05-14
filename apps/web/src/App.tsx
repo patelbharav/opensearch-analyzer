@@ -12,6 +12,7 @@ import { SettingsPage } from "./pages/Settings.js";
 import { ProfilePage } from "./pages/Profile.js";
 import { detectEmbedded, EmbedContext, useParentDomainArn } from "./embed.js";
 import { useAuth } from "./auth.js";
+import { useTheme } from "./useTheme.js";
 import { LoginModal } from "./components/LoginModal.js";
 
 const NAV_ITEMS = [
@@ -27,6 +28,7 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { dark, toggle: toggleTheme } = useTheme();
   const [loginOpen, setLoginOpen] = useState(false);
 
   const embedded = useMemo(() => detectEmbedded(), []);
@@ -74,18 +76,25 @@ export function App() {
     <EmbedContext.Provider value={ctxValue}>
       <TopNavigation
         identity={{ href: "/", title: "OpenSearch Analyzer" }}
-        utilities={
-          user
+        utilities={[
+          {
+            type: "button",
+            iconName: dark ? "star-filled" : "star",
+            text: dark ? "Light mode" : "Dark mode",
+            ariaLabel: "Toggle theme",
+            onClick: toggleTheme,
+          },
+          ...(user
             ? [
                 {
-                  type: "menu-dropdown",
-                  iconName: "user-profile",
+                  type: "menu-dropdown" as const,
+                  iconName: "user-profile" as const,
                   text: user.displayName,
                   items: [
                     { id: "profile", text: "Profile & History" },
                     { id: "logout", text: "Sign out" },
                   ],
-                  onItemClick: (e) => {
+                  onItemClick: (e: { detail: { id: string } }) => {
                     if (e.detail.id === "logout") logout();
                     if (e.detail.id === "profile") navigate("/profile");
                   },
@@ -93,14 +102,14 @@ export function App() {
               ]
             : [
                 {
-                  type: "button",
-                  iconName: "user-profile",
+                  type: "button" as const,
+                  iconName: "user-profile" as const,
                   text: "Sign in",
                   ariaLabel: "Sign in",
                   onClick: () => setLoginOpen(true),
                 },
-              ]
-        }
+              ]),
+        ]}
       />
       <LoginModal visible={loginOpen} onDismiss={() => setLoginOpen(false)} />
       <AppLayout

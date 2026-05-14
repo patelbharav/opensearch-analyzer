@@ -1,10 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDomainSelection } from "../useDomainSelection.js";
-import Badge from "@cloudscape-design/components/badge";
 import Box from "@cloudscape-design/components/box";
-import ColumnLayout from "@cloudscape-design/components/column-layout";
-import Container from "@cloudscape-design/components/container";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 import Header from "@cloudscape-design/components/header";
 import LineChart from "@cloudscape-design/components/line-chart";
@@ -105,171 +102,130 @@ export function OverviewPage() {
         </Header>
       }
     >
-      <SpaceBetween size="m">
-        {/* ---- Summary cards ---- */}
+      <SpaceBetween size="l">
+        {/* ---- Metric cards ---- */}
         {summary && (
-          <Container header={<Header variant="h2">Health summary</Header>}>
-            <ColumnLayout columns={4} variant="text-grid">
-              <KV
-                label="Cluster status"
-                value={
-                  summary.red ? (
-                    <StatusIndicator type="error">RED</StatusIndicator>
-                  ) : summary.yellow ? (
-                    <StatusIndicator type="warning">YELLOW</StatusIndicator>
-                  ) : (
-                    <StatusIndicator type="success">GREEN</StatusIndicator>
-                  )
-                }
-              />
-              <KV
-                label="JVM heap (peak)"
-                value={`${Math.round(summary.jvmMax)}%`}
-                bad={summary.jvmMax >= 80}
-                threshold="< 80%"
-              />
-              <KV
-                label="CPU (peak)"
-                value={`${Math.round(summary.cpuMax)}%`}
-                bad={summary.cpuMax >= 75}
-                threshold="< 75%"
-              />
-              <KV
-                label="5xx error rate"
+          <>
+            <div className="osa-section-header">Health</div>
+            <div className="osa-stat-grid">
+              <MetricCard label="Cluster status"
+                value={summary.red ? "RED" : summary.yellow ? "YELLOW" : "GREEN"}
+                status={summary.red ? "danger" : summary.yellow ? "warning" : "success"} />
+              <MetricCard label="JVM heap (peak)" value={`${Math.round(summary.jvmMax)}%`}
+                status={summary.jvmMax >= 80 ? "danger" : undefined} threshold="< 80%" />
+              <MetricCard label="CPU (peak)" value={`${Math.round(summary.cpuMax)}%`}
+                status={summary.cpuMax >= 75 ? "warning" : undefined} threshold="< 75%" />
+              <MetricCard label="5xx error rate"
                 value={summary.totalRequests > 0 ? `${summary.fivexxRate.toFixed(2)}%` : "n/a"}
-                bad={summary.totalRequests > 100 && summary.fivexxRate > 10}
-                threshold="< 10%"
-              />
-            </ColumnLayout>
-          </Container>
-        )}
+                status={summary.fivexxRate > 10 ? "danger" : undefined} threshold="< 10%" />
+            </div>
 
-        {summary && (
-          <Container header={<Header variant="h2">Performance</Header>}>
-            <ColumnLayout columns={4} variant="text-grid">
-              <KV label="Indexing latency (avg)" value={`${summary.indexingAvg.toFixed(1)} ms`} />
-              <KV label="Search latency (avg)" value={`${summary.searchAvg.toFixed(1)} ms`} />
-              <KV
-                label="Free storage (min node)"
-                value={`${(summary.freeStorageMin / 1024).toFixed(1)} GiB`}
-              />
-              <KV label="Total requests" value={Math.round(summary.totalRequests).toLocaleString()} />
-            </ColumnLayout>
-          </Container>
-        )}
+            <div className="osa-section-header">Performance</div>
+            <div className="osa-stat-grid">
+              <MetricCard label="Indexing latency" value={`${summary.indexingAvg.toFixed(1)} ms`} />
+              <MetricCard label="Search latency" value={`${summary.searchAvg.toFixed(1)} ms`} />
+              <MetricCard label="Free storage (min)" value={`${(summary.freeStorageMin / 1024).toFixed(1)} GiB`} />
+              <MetricCard label="Total requests" value={Math.round(summary.totalRequests).toLocaleString()} />
+            </div>
 
-        {summary && (
-          <Container header={<Header variant="h2">Stability</Header>}>
-            <ColumnLayout columns={4} variant="text-grid">
-              <KV
-                label="Snapshot failures"
-                value={summary.snapshotFailures > 0
-                  ? <Badge color="red">{Math.round(summary.snapshotFailures)}</Badge>
-                  : <Badge color="green">0</Badge>}
-              />
-              <KV
-                label="EBS burst balance"
-                value={summary.burstBalanceMin !== null
-                  ? `${Math.round(summary.burstBalanceMin)}%`
-                  : "n/a (gp3 or no data)"}
-                bad={summary.burstBalanceMin !== null && summary.burstBalanceMin < 70}
-                threshold="> 70%"
-              />
-              <KV
-                label="Search rejections"
-                value={summary.searchRejected > 0
-                  ? <Badge color="red">{Math.round(summary.searchRejected)}</Badge>
-                  : <Badge color="green">0</Badge>}
-              />
-              <KV
-                label="Write rejections"
-                value={summary.writeRejected > 0
-                  ? <Badge color="red">{Math.round(summary.writeRejected)}</Badge>
-                  : <Badge color="green">0</Badge>}
-              />
-            </ColumnLayout>
-          </Container>
+            <div className="osa-section-header">Stability</div>
+            <div className="osa-stat-grid">
+              <MetricCard label="Snapshot failures"
+                value={String(Math.round(summary.snapshotFailures))}
+                status={summary.snapshotFailures > 0 ? "danger" : "success"} />
+              <MetricCard label="EBS burst balance"
+                value={summary.burstBalanceMin !== null ? `${Math.round(summary.burstBalanceMin)}%` : "n/a"}
+                status={summary.burstBalanceMin !== null && summary.burstBalanceMin < 70 ? "danger" : undefined}
+                threshold="> 70%" />
+              <MetricCard label="Search rejections"
+                value={String(Math.round(summary.searchRejected))}
+                status={summary.searchRejected > 0 ? "danger" : "success"} />
+              <MetricCard label="Write rejections"
+                value={String(Math.round(summary.writeRejected))}
+                status={summary.writeRejected > 0 ? "danger" : "success"} />
+            </div>
+          </>
         )}
 
         {/* ---- Charts: core metrics ---- */}
-        <Header variant="h2">Core metrics</Header>
-        <ColumnLayout columns={2} variant="default">
-          <Container header={<Header variant="h3">JVM heap pressure (%)</Header>}>
-            <SeriesChart
-              series={m?.jvmMemoryPressure}
-              loading={metricsQuery.isLoading}
-              ySuffix="%"
-              thresholds={[{ value: 80, label: "Warn 80%" }, { value: 92, label: "Block 92%" }]}
-            />
-          </Container>
-          <Container header={<Header variant="h3">CPU utilization (%)</Header>}>
-            <SeriesChart
-              series={m?.cpuUtilization}
-              loading={metricsQuery.isLoading}
-              ySuffix="%"
-              thresholds={[{ value: 75, label: "Warn 75%" }]}
-            />
-          </Container>
-          <Container header={<Header variant="h3">Free storage (MiB)</Header>}>
+        <div className="osa-section-header">Core metrics</div>
+        <div className="osa-chart-grid">
+          <div className="osa-chart-card"><h3>JVM heap pressure (%)</h3>
+            <SeriesChart series={m?.jvmMemoryPressure} loading={metricsQuery.isLoading} ySuffix="%" thresholds={[{ value: 80, label: "Warn 80%" }, { value: 92, label: "Block 92%" }]} />
+          </div>
+          <div className="osa-chart-card"><h3>CPU utilization (%)</h3>
+            <SeriesChart series={m?.cpuUtilization} loading={metricsQuery.isLoading} ySuffix="%" thresholds={[{ value: 75, label: "Warn 75%" }]} />
+          </div>
+          <div className="osa-chart-card"><h3>Free storage (MiB)</h3>
             <SeriesChart series={m?.freeStorageSpace} loading={metricsQuery.isLoading} ySuffix=" MiB" />
-          </Container>
-          <Container header={<Header variant="h3">Total requests / period</Header>}>
+          </div>
+          <div className="osa-chart-card"><h3>Total requests / period</h3>
             <SeriesChart series={m?.openSearchRequests} loading={metricsQuery.isLoading} />
-          </Container>
-        </ColumnLayout>
+          </div>
+        </div>
 
         {/* ---- Charts: latency ---- */}
-        <Header variant="h2">Latency</Header>
-        <ColumnLayout columns={2} variant="default">
-          <Container header={<Header variant="h3">Indexing latency (ms)</Header>}>
-            <SeriesChart
-              series={m?.indexingLatency}
-              loading={metricsQuery.isLoading}
-              ySuffix=" ms"
-              thresholds={[{ value: 1000, label: "Warn 1s" }]}
-            />
-          </Container>
-          <Container header={<Header variant="h3">Search latency (ms)</Header>}>
-            <SeriesChart
-              series={m?.searchLatency}
-              loading={metricsQuery.isLoading}
-              ySuffix=" ms"
-              thresholds={[{ value: 500, label: "Warn 500ms" }]}
-            />
-          </Container>
-        </ColumnLayout>
+        <div className="osa-section-header">Latency</div>
+        <div className="osa-chart-grid">
+          <div className="osa-chart-card"><h3>Indexing latency (ms)</h3>
+            <SeriesChart series={m?.indexingLatency} loading={metricsQuery.isLoading} ySuffix=" ms" thresholds={[{ value: 1000, label: "Warn 1s" }]} />
+          </div>
+          <div className="osa-chart-card"><h3>Search latency (ms)</h3>
+            <SeriesChart series={m?.searchLatency} loading={metricsQuery.isLoading} ySuffix=" ms" thresholds={[{ value: 500, label: "Warn 500ms" }]} />
+          </div>
+        </div>
 
         {/* ---- Charts: errors & rejections ---- */}
-        <Header variant="h2">Errors and rejections</Header>
-        <ColumnLayout columns={2} variant="default">
-          <Container header={<Header variant="h3">5xx errors / period</Header>}>
+        <div className="osa-section-header">Errors and rejections</div>
+        <div className="osa-chart-grid">
+          <div className="osa-chart-card"><h3>5xx errors / period</h3>
             <SeriesChart series={m?.http5xx} loading={metricsQuery.isLoading} />
-          </Container>
-          <Container header={<Header variant="h3">Search thread pool rejections / period</Header>}>
+          </div>
+          <div className="osa-chart-card"><h3>Search rejections / period</h3>
             <SeriesChart series={m?.threadpoolSearchRejected} loading={metricsQuery.isLoading} />
-          </Container>
-          <Container header={<Header variant="h3">Write thread pool rejections / period</Header>}>
+          </div>
+          <div className="osa-chart-card"><h3>Write rejections / period</h3>
             <SeriesChart series={m?.threadpoolWriteRejected} loading={metricsQuery.isLoading} />
-          </Container>
-          <Container header={<Header variant="h3">Automated snapshot failures</Header>}>
+          </div>
+          <div className="osa-chart-card"><h3>Snapshot failures</h3>
             <SeriesChart series={m?.automatedSnapshotFailure} loading={metricsQuery.isLoading} />
-          </Container>
-        </ColumnLayout>
+          </div>
+        </div>
 
         {/* ---- Charts: storage ---- */}
-        <Header variant="h2">Storage</Header>
-        <ColumnLayout columns={2} variant="default">
-          <Container header={<Header variant="h3">EBS burst balance (%)</Header>}>
+        <div className="osa-section-header">Storage</div>
+        <div className="osa-chart-grid">
+          <div className="osa-chart-card"><h3>EBS burst balance (%)</h3>
             <SeriesChart
               series={m?.burstBalance}
               loading={metricsQuery.isLoading}
               ySuffix="%"
               thresholds={[{ value: 70, label: "Warn 70%" }, { value: 20, label: "Critical 20%" }]}
             />
-          </Container>
-        </ColumnLayout>
+          </div>
+        </div>
       </SpaceBetween>
     </ContentLayout>
+  );
+}
+
+function MetricCard({
+  label,
+  value,
+  status,
+  threshold,
+}: {
+  label: string;
+  value: string;
+  status?: "danger" | "warning" | "success";
+  threshold?: string;
+}) {
+  return (
+    <div className="osa-metric-card">
+      <div className="metric-label">{label}</div>
+      <div className={`metric-value${status ? ` ${status}` : ""}`}>{value}</div>
+      {threshold && <div className="metric-threshold">Threshold: {threshold}</div>}
+    </div>
   );
 }
 

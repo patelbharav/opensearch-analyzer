@@ -6,10 +6,8 @@ import Box from "@cloudscape-design/components/box";
 import Button from "@cloudscape-design/components/button";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 import Header from "@cloudscape-design/components/header";
-import Link from "@cloudscape-design/components/link";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
-import Table from "@cloudscape-design/components/table";
 import Flashbar, { type FlashbarProps } from "@cloudscape-design/components/flashbar";
 import { api } from "../api.js";
 import { AddDomainModal } from "../components/AddDomainModal.js";
@@ -23,8 +21,11 @@ function relativeTime(iso: string): string {
   if (m < 60) return `${m}m ago`;
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h ago`;
-  const d = Math.floor(h / 24);
-  return `${d}d ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
+function authLabel(mode: Domain["authMode"]): string {
+  return { sigv4: "SigV4 / IAM", masterUser: "Master user", cognito: "Cognito" }[mode];
 }
 
 export function DomainsPage() {
@@ -34,17 +35,14 @@ export function DomainsPage() {
     queryKey: ["domains"],
     queryFn: () => api.listDomains(),
   });
+  const domains = data?.domains ?? [];
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [selected, setSelected] = useState<Domain[]>([]);
   const [flash, setFlash] = useState<FlashbarProps.MessageDefinition[]>([]);
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.deleteDomain(id),
-    onSuccess: () => {
-      setSelected([]);
-      void qc.invalidateQueries({ queryKey: ["domains"] });
-    },
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ["domains"] }),
   });
 
   const testMutation = useMutation({
@@ -56,18 +54,8 @@ export function DomainsPage() {
         dismissible: true,
         onDismiss: () => setFlash((prev) => prev.filter((m) => m.id !== msg.id)),
         content: result.ok
-          ? `Connection ok — cluster ${result.clusterName} (status: ${result.status})`
+          ? `Connected — ${result.clusterName} (${result.version}, status: ${result.status})`
           : `Connection failed: ${result.error}`,
-      };
-      setFlash((prev) => [...prev, msg]);
-    },
-    onError: (err) => {
-      const msg: FlashbarProps.MessageDefinition = {
-        id: `test-err-${Date.now()}`,
-        type: "error",
-        dismissible: true,
-        onDismiss: () => setFlash((prev) => prev.filter((m) => m.id !== msg.id)),
-        content: err instanceof Error ? err.message : String(err),
       };
       setFlash((prev) => [...prev, msg]);
     },
@@ -78,27 +66,10 @@ export function DomainsPage() {
       header={
         <Header
           variant="h1"
-          description="Connect an Amazon OpenSearch Service domain to start diagnosing it."
           actions={
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button
-                disabled={selected.length !== 1}
-                onClick={() => selected[0] && testMutation.mutate(selected[0].id)}
-                loading={testMutation.isPending}
-              >
-                Test connection
-              </Button>
-              <Button
-                disabled={selected.length !== 1}
-                onClick={() => selected[0] && deleteMutation.mutate(selected[0].id)}
-                loading={deleteMutation.isPending}
-              >
-                Delete
-              </Button>
-              <Button variant="primary" onClick={() => setModalOpen(true)}>
-                Add domain
-              </Button>
-            </SpaceBetween>
+            <Button variant="primary" iconName="add-plus" onClick={() => setModalOpen(true)}>
+              Add domain
+            </Button>
           }
         >
           Domains
@@ -106,93 +77,112 @@ export function DomainsPage() {
       }
     >
       <SpaceBetween size="m">
+        {/* Hero */}
+        <div className="osa-hero">
+          <h1>OpenSearch Analyzer</h1>
+          <p>Connect your Amazon OpenSearch Service domains. Run diagnostics, apply fixes, and chat with an AI agent that understands your workload.</p>
+        </div>
+
         {flash.length > 0 && <Flashbar items={flash} />}
-        <Table
-          loading={isLoading}
-          selectionType="single"
-          selectedItems={selected}
-          onSelectionChange={(e) => setSelected([...e.detail.selectedItems])}
-          items={data?.domains ?? []}
-          trackBy="id"
-          columnDefinitions={[
-            {
-              id: "name",
-              header: "Name",
-              cell: (d) => (
-                <Link
-                  onFollow={(e) => {
-                    e.preventDefault();
-                    navigate("/findings");
-                  }}
-                  href="/findings"
-                >
-                  {d.name}
-                </Link>
-              ),
-              sortingField: "name",
-              isRowHeader: true,
-            },
-            { id: "region", header: "Region", cell: (d) => d.region, width: 120 },
-            {
-              id: "auth",
-              header: "Auth",
-              cell: (d) => <Badge>{authLabel(d.authMode)}</Badge>,
-              width: 140,
-            },
-            {
-              id: "endpoint",
-              header: "Endpoint",
-              cell: (d) => (
-                <Box variant="small" color="text-body-secondary">
-                  {d.endpoint.replace(/^https?:\/\//, "")}
-                </Box>
-              ),
-            },
-            {
-              id: "lastScan",
-              header: "Last scan",
-              cell: (d) =>
-                d.lastScanAt ? (
-                  <StatusIndicator type="success">
-                    {relativeTime(d.lastScanAt)}
-                  </StatusIndicator>
-                ) : (
-                  <StatusIndicator type="pending">Never</StatusIndicator>
-                ),
-              width: 140,
-            },
-          ]}
-          empty={
-            <Box textAlign="center" color="inherit" padding={{ vertical: "xxl" }}>
-              <SpaceBetween size="m">
-                <Box variant="h2" color="inherit">No domains connected</Box>
-                <Box variant="p" color="text-body-secondary">
-                  Connect an Amazon OpenSearch Service domain to start running diagnostics.
-                </Box>
-                <Button variant="primary" onClick={() => setModalOpen(true)}>
-                  Add your first domain
-                </Button>
-              </SpaceBetween>
+
+        {isLoading && (
+          <Box textAlign="center" padding="xxl">
+            <StatusIndicator type="loading">Loading domains...</StatusIndicator>
+          </Box>
+        )}
+
+        {!isLoading && domains.length === 0 && (
+          <div className="osa-glass-card osa-fade-in" style={{ textAlign: "center", padding: "48px 24px" }}>
+            <Box variant="h2" color="inherit">No domains connected</Box>
+            <Box variant="p" color="text-body-secondary" margin={{ top: "xs", bottom: "m" }}>
+              Add your first OpenSearch domain to start running diagnostics.
             </Box>
-          }
-          header={<Header counter={`(${data?.domains.length ?? 0})`}>Connected domains</Header>}
+            <Button variant="primary" iconName="add-plus" onClick={() => setModalOpen(true)}>
+              Add your first domain
+            </Button>
+          </div>
+        )}
+
+        {/* Domain cards grid */}
+        {domains.length > 0 && (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
+            gap: 16,
+          }}>
+            {domains.map((d) => (
+              <DomainCard
+                key={d.id}
+                domain={d}
+                onTest={() => testMutation.mutate(d.id)}
+                onDelete={() => deleteMutation.mutate(d.id)}
+                onNavigate={() => navigate("/findings")}
+                testing={testMutation.isPending}
+              />
+            ))}
+          </div>
+        )}
+
+        <AddDomainModal
+          visible={modalOpen}
+          onDismiss={() => setModalOpen(false)}
+          onCreated={() => qc.invalidateQueries({ queryKey: ["domains"] })}
         />
       </SpaceBetween>
-
-      <AddDomainModal
-        visible={modalOpen}
-        onDismiss={() => setModalOpen(false)}
-        onCreated={() => qc.invalidateQueries({ queryKey: ["domains"] })}
-      />
     </ContentLayout>
   );
 }
 
-function authLabel(mode: Domain["authMode"]): string {
-  switch (mode) {
-    case "sigv4":      return "SigV4 / IAM";
-    case "masterUser": return "Master user";
-    case "cognito":    return "Cognito";
-  }
+function DomainCard({
+  domain,
+  onTest,
+  onDelete,
+  onNavigate,
+  testing,
+}: {
+  domain: Domain;
+  onTest: () => void;
+  onDelete: () => void;
+  onNavigate: () => void;
+  testing: boolean;
+}) {
+  return (
+    <div className="osa-domain-card osa-fade-in">
+      <div className="card-header" onClick={onNavigate} style={{ cursor: "pointer" }}>
+        <h3>{domain.name}</h3>
+        <div className="region">{domain.region}</div>
+      </div>
+      <div className="card-body">
+        <div className="stat-row">
+          <span className="stat-label">Auth</span>
+          <Badge>{authLabel(domain.authMode)}</Badge>
+        </div>
+        <div className="stat-row">
+          <span className="stat-label">Endpoint</span>
+          <span style={{ fontSize: 11, color: "var(--osa-text-secondary)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {domain.endpoint.replace(/^https?:\/\//, "")}
+          </span>
+        </div>
+        <div className="stat-row">
+          <span className="stat-label">Last scan</span>
+          {domain.lastScanAt ? (
+            <StatusIndicator type="success">{relativeTime(domain.lastScanAt)}</StatusIndicator>
+          ) : (
+            <StatusIndicator type="pending">Never</StatusIndicator>
+          )}
+        </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          <Button onClick={onTest} loading={testing} variant="normal" iconName="status-positive">
+            Test
+          </Button>
+          <Button onClick={onNavigate} variant="primary" iconName="search">
+            Scan
+          </Button>
+          <Button onClick={onDelete} variant="link" iconName="remove">
+            Delete
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
-
