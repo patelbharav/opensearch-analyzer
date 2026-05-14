@@ -273,8 +273,12 @@ function CreateRuleSetModal({ visible, onDismiss, onCreated }: { visible: boolea
         <Box float="right">
           <SpaceBetween direction="horizontal" size="xs">
             <Button onClick={onDismiss} variant="link">Cancel</Button>
-            <Button variant="primary" onClick={() => createMutation.mutate()} loading={createMutation.isPending} disabled={!name || rules.length === 0}>
-              Create ({rules.length} rule{rules.length !== 1 ? "s" : ""})
+            <Button variant="primary" onClick={() => createMutation.mutate()} loading={createMutation.isPending} disabled={!name.trim() || rules.length === 0}>
+              {!name.trim()
+                ? "Enter a rule set name first"
+                : rules.length === 0
+                  ? "Add at least one rule"
+                  : `Create (${rules.length} rule${rules.length !== 1 ? "s" : ""})`}
             </Button>
           </SpaceBetween>
         </Box>
@@ -282,7 +286,7 @@ function CreateRuleSetModal({ visible, onDismiss, onCreated }: { visible: boolea
     >
       <SpaceBetween size="m">
         {error && <Alert type="error">{error}</Alert>}
-        <FormField label="Rule set name">
+        <FormField label="Rule set name" constraintText="Required — this names the policy set shown on the Findings page.">
           <Input value={name} onChange={(e) => setName(e.detail.value)} placeholder="e.g. Production standards" />
         </FormField>
         <FormField label="Description (optional)">
