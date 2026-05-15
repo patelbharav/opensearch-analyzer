@@ -73,6 +73,7 @@
 /* ---- Global font + page background ---- */
 body, html {
   font-family: var(--osa-font) !important;
+  font-size: 15px !important;
   background: var(--osa-page-bg) !important;
   color: var(--osa-text-primary);
   -webkit-font-smoothing: antialiased;
@@ -82,6 +83,7 @@ body, html {
 /* Override Cloudscape's internal font to match */
 [class*="awsui"] {
   font-family: var(--osa-font) !important;
+  font-size: 14px !important;
 }
 
 /* ---- Hero banners ---- */
