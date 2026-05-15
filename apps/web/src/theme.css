@@ -152,11 +152,11 @@ body, html {
   box-shadow: var(--osa-card-hover-shadow);
 }
 .osa-metric-card .metric-label {
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--osa-text-muted);
+  letter-spacing: 0.4px;
+  color: var(--osa-text-primary);
   margin-bottom: 6px;
 }
 .osa-metric-card .metric-value {
@@ -175,8 +175,8 @@ body, html {
   color: var(--osa-color-success);
 }
 .osa-metric-card .metric-threshold {
-  font-size: 10px;
-  color: var(--osa-text-muted);
+  font-size: 11px;
+  color: var(--osa-text-secondary);
   margin-top: 4px;
 }
 
@@ -204,11 +204,11 @@ body, html {
   box-shadow: var(--osa-card-hover-shadow);
 }
 .osa-chart-card h3 {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--osa-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--osa-text-primary);
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   margin: 0 0 10px;
 }
 
