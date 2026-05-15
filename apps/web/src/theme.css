@@ -299,15 +299,37 @@ body, html {
 
 /* ---- Section headers ---- */
 .osa-section-header {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--osa-text-muted);
+  letter-spacing: 0.6px;
+  color: var(--osa-text-primary);
   padding-bottom: 8px;
   border-bottom: 1px solid var(--osa-border);
   margin-bottom: 12px;
   margin-top: 6px;
+}
+
+/* ---- Global text visibility override ---- */
+/* Ensure all labels, descriptions, and secondary text across every page
+   use readable dark colors instead of faint muted grays. */
+[class*="awsui_label"],
+[class*="awsui_description"],
+[class*="awsui_secondary-text"],
+[class*="awsui_key-label"] {
+  color: var(--osa-text-secondary) !important;
+}
+[class*="awsui_header-variant-h1"],
+[class*="awsui_header-variant-h2"],
+[class*="awsui_header-variant-h3"],
+[class*="awsui_heading"] {
+  color: var(--osa-text-primary) !important;
+}
+[class*="awsui_body-cell"],
+[class*="awsui_cell-content"],
+[class*="awsui_content"] p,
+[class*="awsui_content"] span {
+  color: var(--osa-text-primary);
 }
 
 /* ---- Scrollbar ---- */
