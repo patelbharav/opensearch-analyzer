@@ -327,7 +327,7 @@ body, html {
   color: #374151 !important;
 }
 
-/* Light text on dark backgrounds (nav, hero, card headers) */
+/* Light text on dark backgrounds (nav, hero, card headers, tabs) */
 .osa-hero,
 .osa-hero h1,
 .osa-hero p,
@@ -337,6 +337,20 @@ body, html {
 [class*="awsui_navigation-panel"],
 [class*="awsui_navigation_"] {
   color: #f3f4f6 !important;
+}
+
+/* Tabs text — must be visible on the page background */
+[class*="awsui_tabs-tab"],
+[class*="awsui_tab-link"],
+[class*="awsui_tabs"] button,
+[class*="awsui_tabs"] a {
+  color: var(--osa-text-primary) !important;
+}
+[class*="awsui_tabs-tab--active"] button,
+[class*="awsui_tabs-tab--active"] a,
+[class*="awsui_tab-link--active"] {
+  color: #111827 !important;
+  font-weight: 600 !important;
 }
 
 /* Labels and descriptions — medium-dark for readability */
@@ -387,27 +401,22 @@ body, html {
 ::-webkit-scrollbar-thumb { background: var(--osa-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--osa-text-muted); }
 
-/* ---- Side navigation — dark panel ---- */
+/* ---- Side navigation — dark panel (high specificity) ---- */
 [class*="awsui_navigation-panel"],
 [class*="awsui_navigation_"] {
   background: #1f2937 !important;
   border-right: none !important;
 }
-[class*="awsui_navigation-panel"] [class*="awsui_header"],
-[class*="awsui_navigation_"] [class*="awsui_header"] {
-  color: #f3f4f6 !important;
+[class*="awsui_navigation-panel"] *,
+[class*="awsui_navigation_"] * {
+  color: #e5e7eb !important;
 }
-[class*="awsui_navigation-panel"] a,
-[class*="awsui_navigation_"] a,
-[class*="awsui_navigation-panel"] [class*="awsui_link"],
-[class*="awsui_navigation_"] [class*="awsui_link"] {
-  color: #d1d5db !important;
-}
+[class*="awsui_navigation-panel"] [class*="active"] *,
+[class*="awsui_navigation_"] [class*="active"] *,
 [class*="awsui_navigation-panel"] [class*="awsui_link--active"],
-[class*="awsui_navigation_"] [class*="awsui_link--active"],
-[class*="awsui_navigation-panel"] [class*="active"],
-[class*="awsui_navigation_"] [class*="active"] {
+[class*="awsui_navigation_"] [class*="awsui_link--active"] {
   color: #ffffff !important;
+  font-weight: 600 !important;
 }
 
 /* ---- Smooth page transitions ---- */
