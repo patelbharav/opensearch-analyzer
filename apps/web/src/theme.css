@@ -310,26 +310,75 @@ body, html {
   margin-top: 6px;
 }
 
-/* ---- Global text visibility override ---- */
-/* Ensure all labels, descriptions, and secondary text across every page
-   use readable dark colors instead of faint muted grays. */
+/* ---- Contrast text rules ---- */
+/* Dark text on light backgrounds (white cards, raised surfaces) */
+.osa-metric-card,
+.osa-chart-card,
+.osa-glass-card,
+.osa-domain-card .card-body,
+[class*="awsui_container"],
+[class*="awsui_table"],
+[class*="awsui_split-panel"],
+[class*="awsui_modal-content"] {
+  color: #111827 !important;
+}
+.osa-metric-card .metric-label,
+.osa-chart-card h3 {
+  color: #374151 !important;
+}
+
+/* Light text on dark backgrounds (nav, hero, card headers) */
+.osa-hero,
+.osa-hero h1,
+.osa-hero p,
+.osa-domain-card .card-header,
+.osa-domain-card .card-header h3,
+.osa-domain-card .card-header .region,
+[class*="awsui_navigation-panel"],
+[class*="awsui_navigation_"] {
+  color: #f3f4f6 !important;
+}
+
+/* Labels and descriptions — medium-dark for readability */
 [class*="awsui_label"],
 [class*="awsui_description"],
-[class*="awsui_secondary-text"],
 [class*="awsui_key-label"] {
-  color: var(--osa-text-secondary) !important;
+  color: #4b5563 !important;
 }
+
+/* Headings always dark on content areas */
 [class*="awsui_header-variant-h1"],
 [class*="awsui_header-variant-h2"],
 [class*="awsui_header-variant-h3"],
 [class*="awsui_heading"] {
-  color: var(--osa-text-primary) !important;
+  color: #111827 !important;
 }
-[class*="awsui_body-cell"],
-[class*="awsui_cell-content"],
-[class*="awsui_content"] p,
-[class*="awsui_content"] span {
-  color: var(--osa-text-primary);
+
+/* Dark mode: flip contrast */
+.awsui-dark .osa-metric-card,
+.awsui-dark .osa-chart-card,
+.awsui-dark .osa-glass-card,
+.awsui-dark .osa-domain-card .card-body,
+.awsui-dark [class*="awsui_container"],
+.awsui-dark [class*="awsui_table"],
+.awsui-dark [class*="awsui_split-panel"],
+.awsui-dark [class*="awsui_modal-content"] {
+  color: #f3f4f6 !important;
+}
+.awsui-dark .osa-metric-card .metric-label,
+.awsui-dark .osa-chart-card h3 {
+  color: #d1d5db !important;
+}
+.awsui-dark [class*="awsui_label"],
+.awsui-dark [class*="awsui_description"],
+.awsui-dark [class*="awsui_key-label"] {
+  color: #d1d5db !important;
+}
+.awsui-dark [class*="awsui_header-variant-h1"],
+.awsui-dark [class*="awsui_header-variant-h2"],
+.awsui-dark [class*="awsui_header-variant-h3"],
+.awsui-dark [class*="awsui_heading"] {
+  color: #f9fafb !important;
 }
 
 /* ---- Scrollbar ---- */
