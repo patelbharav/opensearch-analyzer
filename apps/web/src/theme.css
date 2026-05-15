@@ -314,16 +314,27 @@ body, html {
 ::-webkit-scrollbar-thumb { background: var(--osa-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--osa-text-muted); }
 
-/* ---- Side navigation ---- */
+/* ---- Side navigation — dark panel ---- */
 [class*="awsui_navigation-panel"],
 [class*="awsui_navigation_"] {
-  background: var(--osa-surface-raised) !important;
+  background: #1f2937 !important;
   border-right: none !important;
-  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.04) !important;
 }
-.awsui-dark [class*="awsui_navigation-panel"],
-.awsui-dark [class*="awsui_navigation_"] {
-  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.2) !important;
+[class*="awsui_navigation-panel"] [class*="awsui_header"],
+[class*="awsui_navigation_"] [class*="awsui_header"] {
+  color: #f3f4f6 !important;
+}
+[class*="awsui_navigation-panel"] a,
+[class*="awsui_navigation_"] a,
+[class*="awsui_navigation-panel"] [class*="awsui_link"],
+[class*="awsui_navigation_"] [class*="awsui_link"] {
+  color: #d1d5db !important;
+}
+[class*="awsui_navigation-panel"] [class*="awsui_link--active"],
+[class*="awsui_navigation_"] [class*="awsui_link--active"],
+[class*="awsui_navigation-panel"] [class*="active"],
+[class*="awsui_navigation_"] [class*="active"] {
+  color: #ffffff !important;
 }
 
 /* ---- Smooth page transitions ---- */
